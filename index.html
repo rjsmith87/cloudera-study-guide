@@ -4,493 +4,114 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cloudera SE Study Guide</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0C0F12;
-    --surface: #151A1F;
-    --surface-2: #1C2229;
-    --border: #2A3240;
-    --text: #E4E8ED;
-    --text-muted: #8B95A5;
-    --accent: #FF6B35;
-    --accent-dim: rgba(255,107,53,0.15);
-    --teal: #00C9A7;
-    --teal-dim: rgba(0,201,167,0.12);
-    --blue: #4B9FFF;
-    --blue-dim: rgba(75,159,255,0.12);
-    --purple: #A78BFA;
-    --purple-dim: rgba(167,139,250,0.12);
-    --gold: #FBBF24;
-    --gold-dim: rgba(251,191,36,0.12);
-    --red: #F87171;
-    --red-dim: rgba(248,113,113,0.12);
-    --pink: #F472B6;
-    --pink-dim: rgba(244,114,182,0.12);
-    --mono: 'Space Mono', monospace;
-    --sans: 'Instrument Sans', system-ui, sans-serif;
-    --radius: 10px;
-  }
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', -apple-system, sans-serif; background: #fff; color: #1a1a1a; line-height: 1.65; font-size: 15px; }
 
-  body {
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* HEADER */
-  header {
-    border-bottom: 1px solid var(--border);
-    padding: 1.5rem 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    background: rgba(12,15,18,0.92);
-    backdrop-filter: blur(20px);
-    z-index: 100;
-  }
-  .logo {
-    font-family: var(--mono);
-    font-size: 0.85rem;
-    color: var(--accent);
-    letter-spacing: 0.05em;
-  }
-  .logo span { color: var(--text-muted); }
-
-  /* NAV TABS */
-  nav {
-    display: flex;
-    gap: 4px;
-    background: var(--surface);
-    padding: 4px;
-    border-radius: 8px;
-  }
-  nav button {
-    font-family: var(--sans);
-    font-size: 0.8rem;
-    font-weight: 600;
-    padding: 8px 16px;
-    border: none;
-    background: transparent;
-    color: var(--text-muted);
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.2s;
-    white-space: nowrap;
-  }
-  nav button:hover { color: var(--text); }
-  nav button.active {
-    background: var(--accent);
-    color: #fff;
-  }
+  /* NAV */
+  header { border-bottom: 1px solid #e5e5e5; padding: 0 2rem; position: sticky; top: 0; background: #fff; z-index: 100; }
+  nav { max-width: 900px; margin: 0 auto; display: flex; gap: 0; overflow-x: auto; }
+  nav button { font-family: inherit; font-size: 14px; font-weight: 500; padding: 14px 20px; border: none; background: none; color: #666; cursor: pointer; white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.15s; }
+  nav button:hover { color: #1a1a1a; }
+  nav button.active { color: #E45525; border-bottom-color: #E45525; }
 
   /* MAIN */
-  main {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 2.5rem 2rem 4rem;
-  }
-
+  main { max-width: 900px; margin: 0 auto; padding: 2.5rem 2rem 5rem; }
   .section { display: none; }
   .section.active { display: block; }
 
-  /* SECTION HEADERS */
-  .section-head {
-    margin-bottom: 2.5rem;
-  }
-  .section-head h1 {
-    font-family: var(--mono);
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    line-height: 1.2;
-  }
-  .section-head p {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-    max-width: 600px;
-  }
+  h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; }
+  .subtitle { color: #666; font-size: 15px; margin-bottom: 2.5rem; }
 
-  /* CARDS */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-  }
-  .card h3 {
-    font-family: var(--mono);
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .card p { color: var(--text-muted); font-size: 0.9rem; }
+  /* LAYER LABELS */
+  .layer { margin-top: 2.5rem; margin-bottom: 1rem; }
+  .layer-name { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #999; }
 
-  .tag {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    padding: 3px 8px;
-    border-radius: 4px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .tag-high { background: var(--accent-dim); color: var(--accent); }
-  .tag-med { background: var(--gold-dim); color: var(--gold); }
-  .tag-low { background: var(--blue-dim); color: var(--blue); }
+  /* TOOL CARDS */
+  .tools { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  .tool { border: 1px solid #e5e5e5; border-radius: 10px; padding: 20px 24px; }
+  .tool-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .tool-name { font-size: 17px; font-weight: 700; }
+  .pri { font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: 20px; }
+  .pri-high { background: #FEE2E2; color: #DC2626; }
+  .pri-med { background: #FEF3C7; color: #D97706; }
+  .pri-low { background: #E0F2FE; color: #0284C7; }
+  .tool-desc { color: #444; margin-bottom: 12px; }
+  .sf-box { background: #F0FDF4; border-left: 3px solid #22C55E; padding: 12px 16px; border-radius: 0 8px 8px 0; color: #15803D; font-size: 14px; line-height: 1.55; }
+  .sf-box strong { font-weight: 600; }
 
-  /* SALESFORCE ANALOGY BOX */
-  .sf-analogy {
-    margin-top: 1rem;
-    padding: 0.85rem 1rem;
-    background: var(--teal-dim);
-    border-left: 3px solid var(--teal);
-    border-radius: 0 6px 6px 0;
-    font-size: 0.85rem;
-    color: var(--teal);
-  }
-  .sf-analogy strong { color: var(--teal); }
+  /* DATA FLOWS */
+  .flow-card { border: 1px solid #e5e5e5; border-radius: 10px; padding: 24px; margin-bottom: 20px; }
+  .flow-card h2 { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .flow-card .flow-sub { color: #666; font-size: 14px; margin-bottom: 20px; }
+  .flow-steps { display: flex; flex-direction: column; gap: 0; }
+  .flow-step { display: flex; align-items: flex-start; gap: 16px; padding: 14px 0; }
+  .flow-step:not(:last-child) { border-bottom: 1px solid #f0f0f0; }
+  .step-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+  .step-ingest { background: #FFF7ED; color: #EA580C; }
+  .step-stream { background: #F5F3FF; color: #7C3AED; }
+  .step-process { background: #EFF6FF; color: #2563EB; }
+  .step-store { background: #F0FDF4; color: #16A34A; }
+  .step-serve { background: #FFFBEB; color: #D97706; }
+  .step-govern { background: #FDF2F8; color: #DB2777; }
+  .step-ai { background: #FEF2F2; color: #DC2626; }
+  .step-body { flex: 1; }
+  .step-tool { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
+  .step-what { color: #444; font-size: 14px; margin-bottom: 4px; }
+  .step-sf { color: #16A34A; font-size: 13px; }
 
-  /* DATA FLOW DIAGRAMS */
-  .flow-container {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 2rem;
-    margin-bottom: 2rem;
-    overflow-x: auto;
-  }
-  .flow-title {
-    font-family: var(--mono);
-    font-size: 1.1rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-  }
-  .flow-subtitle {
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    margin-bottom: 1.5rem;
-  }
-  .flow {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    min-width: max-content;
-    padding: 1rem 0;
-  }
-  .flow-node {
-    padding: 1rem 1.2rem;
-    border-radius: 8px;
-    text-align: center;
-    min-width: 130px;
-    position: relative;
-  }
-  .flow-node .fn-label {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    font-weight: 700;
-    margin-bottom: 4px;
-  }
-  .flow-node .fn-desc {
-    font-size: 0.7rem;
-    opacity: 0.8;
-  }
-  .flow-node .fn-sf {
-    font-size: 0.65rem;
-    margin-top: 6px;
-    padding-top: 6px;
-    border-top: 1px solid rgba(255,255,255,0.15);
-    font-style: italic;
-  }
-  .flow-arrow {
-    font-size: 1.2rem;
-    color: var(--text-muted);
-    padding: 0 8px;
-    flex-shrink: 0;
-  }
-  .fn-ingest { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(255,107,53,0.3); }
-  .fn-stream { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(167,139,250,0.3); }
-  .fn-process { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(75,159,255,0.3); }
-  .fn-store { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(0,201,167,0.3); }
-  .fn-serve { background: var(--gold-dim); color: var(--gold); border: 1px solid rgba(251,191,36,0.3); }
-  .fn-govern { background: var(--pink-dim); color: var(--pink); border: 1px solid rgba(244,114,182,0.3); }
-  .fn-ai { background: var(--red-dim); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+  /* FLASH CARDS */
+  .score-bar { display: flex; align-items: center; gap: 16px; margin-bottom: 20px; padding: 16px 20px; background: #F9FAFB; border-radius: 10px; }
+  .score-bar .score-num { font-size: 24px; font-weight: 700; color: #E45525; }
+  .score-bar .score-label { font-size: 13px; color: #666; }
+  .prog { flex: 1; height: 6px; background: #E5E5E5; border-radius: 3px; }
+  .prog-fill { height: 100%; background: #E45525; border-radius: 3px; transition: width 0.4s; }
+  .btn-sm { font-family: inherit; font-size: 13px; padding: 6px 14px; border: 1px solid #ddd; background: #fff; color: #666; border-radius: 6px; cursor: pointer; }
+  .btn-sm:hover { border-color: #999; color: #1a1a1a; }
 
-  .flow-legend {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-  }
-  .flow-legend span {
-    font-size: 0.7rem;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--text-muted);
-  }
-  .flow-legend .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    display: inline-block;
-  }
+  .filters { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+  .filters button { font-family: inherit; font-size: 13px; padding: 6px 14px; border: 1px solid #e5e5e5; background: #fff; color: #666; border-radius: 20px; cursor: pointer; transition: all 0.15s; }
+  .filters button:hover { border-color: #999; color: #1a1a1a; }
+  .filters button.active { background: #E45525; border-color: #E45525; color: #fff; }
 
-  /* QUIZ CARDS */
-  .quiz-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1rem;
-  }
-  .quiz-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    height: 220px;
-    cursor: pointer;
-    perspective: 1000px;
-    position: relative;
-  }
-  .quiz-card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.5s;
-    transform-style: preserve-3d;
-  }
-  .quiz-card.flipped .quiz-card-inner {
-    transform: rotateY(180deg);
-  }
-  .quiz-front, .quiz-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .quiz-front {
-    background: var(--surface);
-    border: 1px solid var(--border);
-  }
-  .quiz-front .q-category {
-    font-family: var(--mono);
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--accent);
-    margin-bottom: 0.75rem;
-  }
-  .quiz-front .q-question {
-    font-size: 1.05rem;
-    font-weight: 600;
-    line-height: 1.4;
-  }
-  .quiz-front .q-hint {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    margin-top: auto;
-    padding-top: 1rem;
-  }
-  .quiz-back {
-    background: var(--surface-2);
-    border: 1px solid var(--teal);
-    transform: rotateY(180deg);
-  }
-  .quiz-back .q-answer {
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: var(--text);
-  }
-  .quiz-back .q-sf {
-    font-size: 0.8rem;
-    color: var(--teal);
-    margin-top: auto;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--border);
-  }
+  .q-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+  .q-card { height: 200px; cursor: pointer; perspective: 800px; }
+  .q-inner { position: relative; width: 100%; height: 100%; transition: transform 0.45s; transform-style: preserve-3d; }
+  .q-card.flipped .q-inner { transform: rotateY(180deg); }
+  .q-front, .q-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 10px; padding: 20px; display: flex; flex-direction: column; justify-content: center; }
+  .q-front { border: 1px solid #e5e5e5; background: #fff; }
+  .q-front .q-cat { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: #E45525; margin-bottom: 10px; }
+  .q-front .q-text { font-size: 16px; font-weight: 600; line-height: 1.4; }
+  .q-front .q-tap { font-size: 12px; color: #bbb; margin-top: auto; }
+  .q-back { background: #F0FDF4; border: 1px solid #BBF7D0; transform: rotateY(180deg); }
+  .q-back .q-ans { font-size: 14px; color: #1a1a1a; line-height: 1.55; }
+  .q-back .q-sf { font-size: 13px; color: #16A34A; margin-top: auto; padding-top: 10px; border-top: 1px solid #BBF7D0; }
 
-  /* QUIZ FILTER */
-  .quiz-filter {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-  }
-  .quiz-filter button {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    padding: 6px 14px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    color: var(--text-muted);
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .quiz-filter button:hover { border-color: var(--accent); color: var(--text); }
-  .quiz-filter button.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+  /* INTERVIEW */
+  .iq { border: 1px solid #e5e5e5; border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+  .iq summary { padding: 16px 20px; cursor: pointer; font-weight: 600; font-size: 15px; list-style: none; display: flex; align-items: center; gap: 10px; }
+  .iq summary::-webkit-details-marker { display: none; }
+  .iq summary::before { content: '▸'; color: #E45525; transition: transform 0.2s; }
+  .iq[open] summary::before { transform: rotate(90deg); }
+  .iq .ans { padding: 0 20px 20px; color: #444; font-size: 14px; line-height: 1.7; }
+  .tp { background: #FFF7ED; border-left: 3px solid #E45525; padding: 12px 16px; margin-top: 12px; border-radius: 0 8px 8px 0; color: #EA580C; font-size: 14px; font-weight: 500; }
 
-  /* TOOL GRID */
-  .tool-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1rem;
-  }
+  /* PROJECT CARDS */
+  .proj { border: 1px solid #e5e5e5; border-radius: 10px; padding: 20px 24px; margin-bottom: 12px; }
+  .proj h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .proj p { color: #444; font-size: 14px; margin-bottom: 12px; }
 
-  /* LAYER LABEL */
-  .layer-label {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-    color: var(--text-muted);
-    margin: 2rem 0 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .layer-label .layer-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    display: inline-block;
-  }
-
-  /* PROGRESS BAR */
-  .progress-bar {
-    width: 100%;
-    height: 4px;
-    background: var(--surface);
-    border-radius: 2px;
-    margin-top: 1.5rem;
-  }
-  .progress-fill {
-    height: 100%;
-    background: var(--accent);
-    border-radius: 2px;
-    transition: width 0.5s;
-  }
-
-  /* INTERVIEW PREP */
-  .interview-q {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    margin-bottom: 0.75rem;
-    overflow: hidden;
-  }
-  .interview-q summary {
-    padding: 1rem 1.25rem;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.95rem;
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .interview-q summary::-webkit-details-marker { display: none; }
-  .interview-q summary::before {
-    content: '▸';
-    color: var(--accent);
-    font-size: 0.85rem;
-    transition: transform 0.2s;
-  }
-  .interview-q[open] summary::before { transform: rotate(90deg); }
-  .interview-q .answer {
-    padding: 0 1.25rem 1.25rem;
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    line-height: 1.7;
-  }
-  .interview-q .answer .talking-point {
-    background: var(--accent-dim);
-    border-left: 3px solid var(--accent);
-    padding: 0.75rem 1rem;
-    margin-top: 0.75rem;
-    border-radius: 0 6px 6px 0;
-    color: var(--accent);
-    font-size: 0.85rem;
-    font-weight: 500;
-  }
-
-  /* RESPONSIVE */
-  @media (max-width: 768px) {
-    header { flex-direction: column; gap: 1rem; }
-    nav { overflow-x: auto; width: 100%; }
+  @media (max-width: 640px) {
     main { padding: 1.5rem 1rem 3rem; }
-    .section-head h1 { font-size: 1.4rem; }
-    .flow { flex-direction: column; }
-    .flow-arrow { transform: rotate(90deg); }
-    .quiz-grid { grid-template-columns: 1fr; }
-    .tool-grid { grid-template-columns: 1fr; }
+    h1 { font-size: 22px; }
+    .q-grid { grid-template-columns: 1fr; }
   }
-
-  /* SCORE BANNER */
-  .score-banner {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
-    margin-bottom: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-  .score-banner .score-label {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-  .score-banner .score-num {
-    font-family: var(--mono);
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--accent);
-  }
-  .score-banner .score-right {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-  }
-  .btn-reset {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    padding: 8px 16px;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: var(--text-muted);
-    border-radius: 6px;
-    cursor: pointer;
-  }
-  .btn-reset:hover { border-color: var(--accent); color: var(--text); }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">CLOUDERA_SE<span> // study guide</span></div>
   <nav id="nav">
     <button class="active" onclick="showSection('overview')">The stack</button>
     <button onclick="showSection('flows')">Data flows</button>
@@ -502,423 +123,274 @@
 
 <main>
 
-<!-- ======================= SECTION: OVERVIEW ======================= -->
+<!-- THE STACK -->
 <div class="section active" id="sec-overview">
-  <div class="section-head">
-    <h1>The Cloudera stack,<br>in Salesforce terms.</h1>
-    <p>Every tool mapped to something you already know. The goal isn't memorization — it's pattern recognition.</p>
-  </div>
+  <h1>The Cloudera stack, in Salesforce terms</h1>
+  <p class="subtitle">Every tool mapped to something you already know. Pattern recognition, not memorization.</p>
 
-  <div class="layer-label"><span class="layer-dot" style="background:var(--accent)"></span> Ingestion — getting data in</div>
-  <div class="tool-grid">
-    <div class="card">
-      <h3>NiFi <span class="tag tag-high">learn first</span></h3>
-      <p>Visual drag-and-drop data routing tool. You draw a pipeline on a canvas — "grab this file from an FTP server, transform the JSON, push it to Kafka." No code. All config.</p>
-      <div class="sf-analogy"><strong>SF equivalent:</strong> Flow Builder. You drag processors onto a canvas and connect them, just like you drag Flow elements. Each processor does one thing — route, filter, transform, deliver. If you can build a Screen Flow, you can understand NiFi.</div>
+  <div class="layer"><span class="layer-name">Ingestion — getting data in</span></div>
+  <div class="tools">
+    <div class="tool">
+      <div class="tool-header"><span class="tool-name">NiFi</span><span class="pri pri-high">Learn first</span></div>
+      <p class="tool-desc">Visual drag-and-drop data routing. You draw a pipeline on a canvas — "grab this file from an FTP server, transform the JSON, push it to Kafka." No code. All config.</p>
+      <div class="sf-box"><strong>SF equivalent:</strong> Flow Builder. You drag processors onto a canvas and connect them, just like Flow elements. Each processor does one thing — route, filter, transform, deliver. If you can build a Screen Flow, you can understand NiFi.</div>
     </div>
-    <div class="card">
-      <h3>Kafka <span class="tag tag-high">learn first</span></h3>
-      <p>A real-time message bus. Systems publish events to "topics" and other systems subscribe to read them. Nothing gets lost. Everything is ordered. Massively scalable.</p>
-      <div class="sf-analogy"><strong>SF equivalent:</strong> Platform Events. When you publish a Platform Event in Salesforce, any subscriber (Flow, Trigger, external system) picks it up. Kafka is that same concept but handling millions of events per second across an entire enterprise — not just within one Salesforce org.</div>
-    </div>
-  </div>
-
-  <div class="layer-label"><span class="layer-dot" style="background:var(--purple)"></span> Stream processing — reacting in real time</div>
-  <div class="tool-grid">
-    <div class="card">
-      <h3>Flink <span class="tag tag-med">know the concept</span></h3>
-      <p>Processes data the instant it arrives in Kafka. Filters, aggregates, enriches, and routes events in real time — no waiting for a batch job.</p>
-      <div class="sf-analogy"><strong>SF equivalent:</strong> Platform Event-Triggered Flow. When a Platform Event fires, your Flow runs immediately on that event. Flink is the same idea: an event hits Kafka → Flink processes it in real time → output goes downstream. The difference is scale and complexity. Flink handles millions of events/sec with stateful logic (e.g., "alert if more than 5 failed logins in 10 minutes").</div>
-    </div>
-    <div class="card">
-      <h3>Spark Streaming <span class="tag tag-med">know the concept</span></h3>
-      <p>Spark's real-time mode. Processes data in micro-batches (every few seconds) rather than true event-by-event like Flink. Slightly more latency, but uses the same Spark engine teams already know.</p>
-      <div class="sf-analogy"><strong>SF equivalent:</strong> Scheduled Flow that runs every 5 minutes vs. a Platform Event-Triggered Flow that fires instantly. Both react to new data, but one has a small delay. Spark Streaming is the scheduled approach — good enough for most use cases.</div>
+    <div class="tool">
+      <div class="tool-header"><span class="tool-name">Kafka</span><span class="pri pri-high">Learn first</span></div>
+      <p class="tool-desc">Real-time message bus. Systems publish events to "topics" and other systems subscribe to read them. Nothing gets lost. Everything is ordered. Massively scalable.</p>
+      <div class="sf-box"><strong>SF equivalent:</strong> Platform Events. When you publish a Platform Event, any subscriber (Flow, Trigger, external system) picks it up. Kafka is the same concept but handling millions of events per second across an entire enterprise.</div>
     </div>
   </div>
 
-  <div class="layer-label"><span class="layer-dot" style="background:var(--blue)"></span> Processing — transforming data at scale</div>
-  <div class="tool-grid">
-    <div class="card">
-      <h3>Spark <span class="tag tag-high">learn first</span></h3>
-      <p>The workhorse. Distributed compute engine that runs SQL, Python, and ML jobs across a cluster of machines. If you have 10TB of data, Spark splits the work across 100 machines and combines the results.</p>
-      <div class="sf-analogy"><strong>SF equivalent:</strong> Think of it like SOQL + Apex Batch, but for the entire world's data. A SOQL query runs on Salesforce's servers against your org's data. A Spark query runs on a cluster against a data lake. You can write Spark queries in SQL (just like SOQL) or Python (PySpark). The mental model is the same: query → transform → output.</div>
+  <div class="layer"><span class="layer-name">Stream processing — reacting in real time</span></div>
+  <div class="tools">
+    <div class="tool">
+      <div class="tool-header"><span class="tool-name">Flink</span><span class="pri pri-med">Know the concept</span></div>
+      <p class="tool-desc">Processes data the instant it arrives in Kafka. Filters, aggregates, enriches, and routes events in real time — no waiting for a batch job.</p>
+      <div class="sf-box"><strong>SF equivalent:</strong> Platform Event-Triggered Flow. Event fires → Flow runs immediately. Flink is the same idea at massive scale with stateful logic (e.g., "alert if more than 5 failed logins in 10 minutes").</div>
     </div>
-    <div class="card">
-      <h3>Impala <span class="tag tag-med">know the concept</span></h3>
-      <p>Interactive SQL engine. Runs fast queries on data in HDFS or Kudu. Built for BI dashboards and ad-hoc analysis where you need answers in seconds, not minutes.</p>
-      <div class="sf-analogy"><strong>SF equivalent:</strong> SOQL in the Developer Console. You write a query, you get results fast. Impala is the same experience but against a data lake instead of a Salesforce org. Analysts use it to power dashboards — same as Salesforce Reports, but on petabytes.</div>
-    </div>
-  </div>
-
-  <div class="layer-label"><span class="layer-dot" style="background:var(--teal)"></span> Storage — where data lives</div>
-  <div class="tool-grid">
-    <div class="card">
-      <h3>HDFS <span class="tag tag-high">learn first</span></h3>
-      <p>Hadoop Distributed File System. Stores massive files by splitting them across machines. Each chunk is replicated 3x so nothing is ever lost. The foundation layer everything else reads from.</p>
-      <div class="sf-analogy"><strong>SF equivalent:</strong> Salesforce Files / ContentVersion, but for the entire enterprise. In Salesforce, you upload a file and it's stored and accessible. HDFS does the same but for terabytes/petabytes of raw data — logs, CSVs, images, JSON. You don't query HDFS directly — you use Spark or Impala to read from it, just like you use SOQL to read from Salesforce objects.</div>
-    </div>
-    <div class="card">
-      <h3>Kudu <span class="tag tag-med">know the concept</span></h3>
-      <p>Fast columnar storage for structured, mutable data. Sits between HDFS (great for batch reads, bad for updates) and HBase (great for lookups, bad for analytics). The sweet spot for dashboards on changing data.</p>
-      <div class="sf-analogy"><strong>SF equivalent:</strong> Big Objects. Salesforce Big Objects store massive structured datasets you can query but rarely update. Kudu is similar but allows fast updates AND fast analytics — like if Big Objects were actually fast and you could run Reports on them.</div>
-    </div>
-    <div class="card">
-      <h3>HBase <span class="tag tag-low">nice to have</span></h3>
-      <p>NoSQL key-value store on top of HDFS. Billions of rows, millisecond lookups by key. Not for analytics — for fast "give me this one record" access.</p>
-      <div class="sf-analogy"><strong>SF equivalent:</strong> External Objects via OData. You have a massive external dataset and you look up individual records by ID. HBase is the storage engine that makes that lookup fast. You wouldn't run a Report on it — you'd query one record at a time.</div>
-    </div>
-    <div class="card">
-      <h3>Iceberg / Hive <span class="tag tag-med">know the concept</span></h3>
-      <p>Table formats that organize files in HDFS into queryable tables with schemas. Iceberg is the modern standard — supports time travel (query data as it existed last Tuesday), schema evolution, and ACID transactions.</p>
-      <div class="sf-analogy"><strong>SF equivalent:</strong> Custom Objects + Field History Tracking. When you create a Custom Object, you define the schema (fields, types). Iceberg does the same for data lake files. Field History Tracking ≈ Iceberg's time travel — both let you see what the data looked like at a previous point.</div>
+    <div class="tool">
+      <div class="tool-header"><span class="tool-name">Spark Streaming</span><span class="pri pri-med">Know the concept</span></div>
+      <p class="tool-desc">Spark's real-time mode. Processes data in micro-batches (every few seconds) rather than true event-by-event like Flink. Slightly more latency, uses the same Spark engine.</p>
+      <div class="sf-box"><strong>SF equivalent:</strong> Scheduled Flow running every 5 minutes vs. a Platform Event-Triggered Flow that fires instantly. Spark Streaming is the scheduled approach — good enough for most use cases.</div>
     </div>
   </div>
 
-  <div class="layer-label"><span class="layer-dot" style="background:var(--pink)"></span> Governance — security, lineage, compliance</div>
-  <div class="tool-grid">
-    <div class="card">
-      <h3>Atlas <span class="tag tag-med">know the concept</span></h3>
-      <p>Data catalog and lineage tracker. Shows where every piece of data came from, every transformation it went through, and who touched it. Essential for compliance and auditing.</p>
-      <div class="sf-analogy"><strong>SF equivalent:</strong> Setup Audit Trail + Data Classification. Setup Audit Trail tracks who changed what config. Atlas does the same but for data — "this revenue number in the dashboard came from this Kafka topic → through this Spark job → into this Kudu table." In regulated industries, auditors ask this question constantly.</div>
+  <div class="layer"><span class="layer-name">Processing — transforming data at scale</span></div>
+  <div class="tools">
+    <div class="tool">
+      <div class="tool-header"><span class="tool-name">Spark</span><span class="pri pri-high">Learn first</span></div>
+      <p class="tool-desc">The workhorse. Distributed compute engine that runs SQL, Python, and ML jobs across a cluster. 10TB of data? Spark splits the work across 100 machines and combines results.</p>
+      <div class="sf-box"><strong>SF equivalent:</strong> SOQL + Apex Batch, but for the entire world's data. A SOQL query runs against your org. A Spark query runs against a data lake. You can write Spark in SQL (like SOQL) or Python (PySpark). Same mental model: query → transform → output.</div>
     </div>
-    <div class="card">
-      <h3>Ranger <span class="tag tag-med">know the concept</span></h3>
-      <p>Centralized access control. Defines who can see which data, down to the column and row level. One policy engine across all tools — Spark, Impala, HDFS, Kafka, everything.</p>
-      <div class="sf-analogy"><strong>SF equivalent:</strong> Profiles + Permission Sets + Field-Level Security, but for the entire data platform. In Salesforce, you control who sees which fields on which objects. Ranger does the same across every tool in the cluster. One policy: "the marketing team can see customer names but not SSNs" — enforced in Spark, Impala, NiFi, everywhere.</div>
-    </div>
-  </div>
-
-  <div class="layer-label"><span class="layer-dot" style="background:var(--red)"></span> AI / ML — Cloudera machine learning</div>
-  <div class="tool-grid">
-    <div class="card">
-      <h3>Cloudera ML (CML) <span class="tag tag-high">learn first</span></h3>
-      <p>Cloudera's ML platform. Jupyter notebooks for experimentation, model training on cluster resources, one-click deployment as REST APIs, and monitoring for model drift. Runs on Kubernetes.</p>
-      <div class="sf-analogy"><strong>SF equivalent:</strong> Einstein AI Platform + Prompt Builder. Einstein trains models on your CRM data and deploys predictions. CML does the same but on any data — images, text, sensor data, whatever lives in the data lake. Your AIRFX experience translates directly: you built AI that makes decisions on enterprise data. CML is the platform that hosts that kind of work at Cloudera.</div>
+    <div class="tool">
+      <div class="tool-header"><span class="tool-name">Impala</span><span class="pri pri-med">Know the concept</span></div>
+      <p class="tool-desc">Interactive SQL engine. Runs fast queries on data in HDFS or Kudu. Built for dashboards and ad-hoc analysis where you need answers in seconds.</p>
+      <div class="sf-box"><strong>SF equivalent:</strong> SOQL in Developer Console. Write a query, get results fast. Impala is the same experience but against a data lake. Analysts use it to power dashboards — just like Salesforce Reports, but on petabytes.</div>
     </div>
   </div>
 
-  <div class="layer-label"><span class="layer-dot" style="background:var(--text-muted)"></span> Infrastructure</div>
-  <div class="tool-grid">
-    <div class="card">
-      <h3>YARN <span class="tag tag-low">nice to have</span></h3>
-      <p>Resource manager for the cluster. Decides which jobs get how much CPU and memory. When you submit a Spark job, YARN allocates containers on cluster nodes to run it.</p>
-      <div class="sf-analogy"><strong>SF equivalent:</strong> Governor Limits + Queueable Apex. Salesforce limits how much CPU time and heap each transaction gets. YARN does the same for a cluster — making sure one giant Spark job doesn't eat all the resources and starve everyone else. It's the traffic cop.</div>
+  <div class="layer"><span class="layer-name">Storage — where data lives</span></div>
+  <div class="tools">
+    <div class="tool">
+      <div class="tool-header"><span class="tool-name">HDFS</span><span class="pri pri-high">Learn first</span></div>
+      <p class="tool-desc">Hadoop Distributed File System. Stores massive files by splitting them across machines. Each chunk replicated 3x so nothing is lost. The foundation everything reads from.</p>
+      <div class="sf-box"><strong>SF equivalent:</strong> Salesforce Files / ContentVersion for the entire enterprise. You upload a file, it's stored and accessible. HDFS does the same for terabytes of raw data. You don't query HDFS directly — you use Spark or Impala, just like you use SOQL to read from objects.</div>
     </div>
-    <div class="card">
-      <h3>Linux <span class="tag tag-med">know the concept</span></h3>
-      <p>The OS everything runs on. You need to be comfortable in a terminal: check logs (<code>tail -f</code>), monitor resources (<code>top</code>, <code>df -h</code>), restart services (<code>systemctl</code>), navigate files (<code>cd</code>, <code>ls</code>, <code>cat</code>).</p>
-      <div class="sf-analogy"><strong>SF equivalent:</strong> You already use bash every day with Claude Code. The gap is ops-specific commands: checking disk space, reading service logs, managing permissions, restarting services. It's not a different world — just a different set of commands in the same terminal you already use.</div>
+    <div class="tool">
+      <div class="tool-header"><span class="tool-name">Kudu</span><span class="pri pri-med">Know the concept</span></div>
+      <p class="tool-desc">Fast columnar storage for structured, mutable data. The sweet spot between HDFS (batch reads) and HBase (fast lookups). Great for dashboards on changing data.</p>
+      <div class="sf-box"><strong>SF equivalent:</strong> Big Objects that are actually fast. Stores massive structured data you can both update quickly AND run analytics on.</div>
+    </div>
+    <div class="tool">
+      <div class="tool-header"><span class="tool-name">HBase</span><span class="pri pri-low">Nice to have</span></div>
+      <p class="tool-desc">NoSQL key-value store on HDFS. Billions of rows, millisecond lookups by key. Not for analytics — for fast "give me this one record" access.</p>
+      <div class="sf-box"><strong>SF equivalent:</strong> External Objects via OData. Massive external dataset, look up individual records by ID. Fast single-record retrieval, not reporting.</div>
+    </div>
+    <div class="tool">
+      <div class="tool-header"><span class="tool-name">Iceberg / Hive</span><span class="pri pri-med">Know the concept</span></div>
+      <p class="tool-desc">Table formats that organize lake files into queryable tables with schemas. Iceberg is the modern standard — time travel, schema evolution, ACID transactions.</p>
+      <div class="sf-box"><strong>SF equivalent:</strong> Custom Objects + Field History Tracking. Defines the schema (fields, types) for raw data. Time travel ≈ Field History — see what data looked like at any previous point.</div>
+    </div>
+  </div>
+
+  <div class="layer"><span class="layer-name">Governance — security, lineage, compliance</span></div>
+  <div class="tools">
+    <div class="tool">
+      <div class="tool-header"><span class="tool-name">Atlas</span><span class="pri pri-med">Know the concept</span></div>
+      <p class="tool-desc">Data catalog + lineage tracker. Shows where every piece of data came from, every transformation, who touched it. Essential for compliance and auditing.</p>
+      <div class="sf-box"><strong>SF equivalent:</strong> Setup Audit Trail + Data Classification. Tracks who changed what. Atlas does the same for data — "this revenue number came from this Kafka topic → through this Spark job → into this table." Auditors ask this constantly.</div>
+    </div>
+    <div class="tool">
+      <div class="tool-header"><span class="tool-name">Ranger</span><span class="pri pri-med">Know the concept</span></div>
+      <p class="tool-desc">Centralized access control. Who can see which data, down to the column and row level. One policy engine across all tools.</p>
+      <div class="sf-box"><strong>SF equivalent:</strong> Profiles + Permission Sets + Field-Level Security for the entire data platform. One policy: "marketing can see names but not SSNs" — enforced in Spark, Impala, NiFi, everywhere.</div>
+    </div>
+  </div>
+
+  <div class="layer"><span class="layer-name">AI / ML</span></div>
+  <div class="tools">
+    <div class="tool">
+      <div class="tool-header"><span class="tool-name">Cloudera ML (CML)</span><span class="pri pri-high">Learn first</span></div>
+      <p class="tool-desc">Cloudera's ML platform. Jupyter notebooks, model training on cluster resources, one-click deployment as REST APIs, monitoring for drift. Runs on Kubernetes.</p>
+      <div class="sf-box"><strong>SF equivalent:</strong> Einstein AI Platform + Prompt Builder. Einstein trains models on CRM data. CML does the same on any data — images, text, sensor data, whatever lives in the lake. Your AIRFX experience translates directly here.</div>
+    </div>
+  </div>
+
+  <div class="layer"><span class="layer-name">Infrastructure</span></div>
+  <div class="tools">
+    <div class="tool">
+      <div class="tool-header"><span class="tool-name">YARN</span><span class="pri pri-low">Nice to have</span></div>
+      <p class="tool-desc">Resource manager. Decides which jobs get how much CPU and memory on the cluster. The traffic cop.</p>
+      <div class="sf-box"><strong>SF equivalent:</strong> Governor Limits + Queueable Apex. Salesforce limits CPU time per transaction. YARN does the same for a cluster — making sure one giant job doesn't starve everyone else.</div>
+    </div>
+    <div class="tool">
+      <div class="tool-header"><span class="tool-name">Linux</span><span class="pri pri-med">Know the concept</span></div>
+      <p class="tool-desc">The OS everything runs on. Check logs, monitor resources, restart services, navigate files. CLI fluency, not sysadmin depth.</p>
+      <div class="sf-box"><strong>SF equivalent:</strong> You use bash daily with Claude Code. The gap is ops commands: checking disk space (<code>df -h</code>), reading logs (<code>tail -f</code>), restarting services (<code>systemctl</code>). Same terminal, different commands.</div>
     </div>
   </div>
 </div>
 
-<!-- ======================= SECTION: DATA FLOWS ======================= -->
+<!-- DATA FLOWS -->
 <div class="section" id="sec-flows">
-  <div class="section-head">
-    <h1>How data flows through<br>the Cloudera stack.</h1>
-    <p>Three real-world patterns. Each one maps to a Salesforce pattern you already know.</p>
-  </div>
+  <h1>How data flows through the stack</h1>
+  <p class="subtitle">Three real-world patterns. Each maps to a Salesforce pattern you already know.</p>
 
-  <!-- FLOW 1: Batch ETL -->
-  <div class="flow-container">
-    <div class="flow-title">Pattern 1: Batch ETL</div>
-    <div class="flow-subtitle">Load, transform, and analyze large datasets on a schedule — like a nightly data sync.</div>
-    <div class="flow">
-      <div class="flow-node fn-ingest">
-        <div class="fn-label">NiFi</div>
-        <div class="fn-desc">Pulls CSV/JSON from FTP, S3, APIs on a schedule</div>
-        <div class="fn-sf">≈ Scheduled Flow pulling data from external system</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node fn-store">
-        <div class="fn-label">HDFS</div>
-        <div class="fn-desc">Raw files land in "raw zone" — untouched, as-is</div>
-        <div class="fn-sf">≈ Staging custom object holding raw imported data</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node fn-process">
-        <div class="fn-label">Spark</div>
-        <div class="fn-desc">Cleans, joins, aggregates. Bad rows filtered, schemas enforced</div>
-        <div class="fn-sf">≈ Apex Batch job that transforms staging → final objects</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node fn-store">
-        <div class="fn-label">Iceberg table</div>
-        <div class="fn-desc">Clean data in queryable tables with versioning</div>
-        <div class="fn-sf">≈ Custom Objects with Field History Tracking</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node fn-serve">
-        <div class="fn-label">Impala</div>
-        <div class="fn-desc">Analysts query tables for dashboards and reports</div>
-        <div class="fn-sf">≈ SOQL powering Salesforce Reports & Dashboards</div>
-      </div>
-    </div>
-    <div class="flow-legend">
-      <span><span class="dot" style="background:var(--accent)"></span> Ingestion</span>
-      <span><span class="dot" style="background:var(--teal)"></span> Storage</span>
-      <span><span class="dot" style="background:var(--blue)"></span> Processing</span>
-      <span><span class="dot" style="background:var(--gold)"></span> Serving</span>
+  <div class="flow-card">
+    <h2>Pattern 1: Batch ETL</h2>
+    <p class="flow-sub">Load, transform, and analyze large datasets on a schedule — like a nightly data sync.</p>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-num step-ingest">1</span><div class="step-body"><div class="step-tool">NiFi</div><div class="step-what">Pulls CSV/JSON from FTP, S3, APIs on a schedule</div><div class="step-sf">≈ Scheduled Flow pulling data from external system</div></div></div>
+      <div class="flow-step"><span class="step-num step-store">2</span><div class="step-body"><div class="step-tool">HDFS (raw zone)</div><div class="step-what">Raw files land untouched, as-is — nothing modified yet</div><div class="step-sf">≈ Staging custom object holding raw imported data</div></div></div>
+      <div class="flow-step"><span class="step-num step-process">3</span><div class="step-body"><div class="step-tool">Spark</div><div class="step-what">Cleans, joins, aggregates. Bad rows filtered, schemas enforced</div><div class="step-sf">≈ Apex Batch job transforming staging → final objects</div></div></div>
+      <div class="flow-step"><span class="step-num step-store">4</span><div class="step-body"><div class="step-tool">Iceberg table</div><div class="step-what">Clean data in queryable tables with versioning</div><div class="step-sf">≈ Custom Objects with Field History Tracking</div></div></div>
+      <div class="flow-step"><span class="step-num step-serve">5</span><div class="step-body"><div class="step-tool">Impala</div><div class="step-what">Analysts query tables for dashboards and reports</div><div class="step-sf">≈ SOQL powering Salesforce Reports &amp; Dashboards</div></div></div>
     </div>
   </div>
 
-  <!-- FLOW 2: Real-time streaming -->
-  <div class="flow-container">
-    <div class="flow-title">Pattern 2: Real-time streaming</div>
-    <div class="flow-subtitle">Process events as they happen — like fraud detection or live telemetry. This is what Cloudera sells hardest.</div>
-    <div class="flow">
-      <div class="flow-node fn-ingest">
-        <div class="fn-label">Source</div>
-        <div class="fn-desc">IoT sensors, app logs, clickstreams, transactions</div>
-        <div class="fn-sf">≈ Inbound API calls hitting your Salesforce org</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node fn-stream">
-        <div class="fn-label">Kafka</div>
-        <div class="fn-desc">Events published to topics. Decouples producers from consumers</div>
-        <div class="fn-sf">≈ Platform Events published to event bus</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node fn-stream">
-        <div class="fn-label">Flink</div>
-        <div class="fn-desc">Processes each event in real time — filter, enrich, detect anomalies</div>
-        <div class="fn-sf">≈ Platform Event-Triggered Flow that fires instantly</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node fn-store">
-        <div class="fn-label">Kudu</div>
-        <div class="fn-desc">Fast-updating storage for dashboards on live data</div>
-        <div class="fn-sf">≈ Custom Object updated in real time, powering a live dashboard</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node fn-serve">
-        <div class="fn-label">Alert / API</div>
-        <div class="fn-desc">Trigger an action — email, API call, block transaction</div>
-        <div class="fn-sf">≈ Outbound Message or Flow email alert</div>
-      </div>
-    </div>
-    <div class="flow-legend">
-      <span><span class="dot" style="background:var(--accent)"></span> Source</span>
-      <span><span class="dot" style="background:var(--purple)"></span> Stream</span>
-      <span><span class="dot" style="background:var(--teal)"></span> Storage</span>
-      <span><span class="dot" style="background:var(--gold)"></span> Action</span>
+  <div class="flow-card">
+    <h2>Pattern 2: Real-time streaming</h2>
+    <p class="flow-sub">Process events as they happen — fraud detection, live telemetry. This is what Cloudera sells hardest.</p>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-num step-ingest">1</span><div class="step-body"><div class="step-tool">Source</div><div class="step-what">IoT sensors, app logs, clickstreams, transactions</div><div class="step-sf">≈ Inbound API calls hitting your Salesforce org</div></div></div>
+      <div class="flow-step"><span class="step-num step-stream">2</span><div class="step-body"><div class="step-tool">Kafka</div><div class="step-what">Events published to topics. Decouples producers from consumers</div><div class="step-sf">≈ Platform Events published to event bus</div></div></div>
+      <div class="flow-step"><span class="step-num step-stream">3</span><div class="step-body"><div class="step-tool">Flink</div><div class="step-what">Processes each event in real time — filter, enrich, detect anomalies</div><div class="step-sf">≈ Platform Event-Triggered Flow that fires instantly</div></div></div>
+      <div class="flow-step"><span class="step-num step-store">4</span><div class="step-body"><div class="step-tool">Kudu</div><div class="step-what">Fast-updating storage for dashboards on live data</div><div class="step-sf">≈ Custom Object updated in real time, powering a live dashboard</div></div></div>
+      <div class="flow-step"><span class="step-num step-serve">5</span><div class="step-body"><div class="step-tool">Alert / API</div><div class="step-what">Trigger an action — email, API call, block transaction</div><div class="step-sf">≈ Outbound Message or Flow email alert</div></div></div>
     </div>
   </div>
 
-  <!-- FLOW 3: ML Pipeline -->
-  <div class="flow-container">
-    <div class="flow-title">Pattern 3: ML pipeline</div>
-    <div class="flow-subtitle">Train a model on historical data, deploy it, and serve predictions — like Einstein but on any data.</div>
-    <div class="flow">
-      <div class="flow-node fn-store">
-        <div class="fn-label">Data lake</div>
-        <div class="fn-desc">Historical data in HDFS / Iceberg tables</div>
-        <div class="fn-sf">≈ All the records in your Salesforce objects</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node fn-process">
-        <div class="fn-label">Spark</div>
-        <div class="fn-desc">Feature engineering — clean, join, create training features</div>
-        <div class="fn-sf">≈ Formula fields + roll-up summaries preparing data for Einstein</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node fn-ai">
-        <div class="fn-label">CML</div>
-        <div class="fn-desc">Train model in Jupyter notebook, experiment, tune</div>
-        <div class="fn-sf">≈ Einstein Model Builder training on your data</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node fn-ai">
-        <div class="fn-label">CML Deploy</div>
-        <div class="fn-desc">One-click deploy as REST API endpoint</div>
-        <div class="fn-sf">≈ Einstein Prediction deployed to a Record Page</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node fn-serve">
-        <div class="fn-label">App / API</div>
-        <div class="fn-desc">App calls model API, gets prediction, takes action</div>
-        <div class="fn-sf">≈ Next Best Action component on a Lightning page</div>
-      </div>
-    </div>
-    <div class="flow-legend">
-      <span><span class="dot" style="background:var(--teal)"></span> Storage</span>
-      <span><span class="dot" style="background:var(--blue)"></span> Processing</span>
-      <span><span class="dot" style="background:var(--red)"></span> AI/ML</span>
-      <span><span class="dot" style="background:var(--gold)"></span> Serving</span>
+  <div class="flow-card">
+    <h2>Pattern 3: ML pipeline</h2>
+    <p class="flow-sub">Train a model on historical data, deploy it, serve predictions — like Einstein but on any data.</p>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-num step-store">1</span><div class="step-body"><div class="step-tool">Data lake</div><div class="step-what">Historical data in HDFS / Iceberg tables</div><div class="step-sf">≈ All the records in your Salesforce objects</div></div></div>
+      <div class="flow-step"><span class="step-num step-process">2</span><div class="step-body"><div class="step-tool">Spark</div><div class="step-what">Feature engineering — clean, join, create training features</div><div class="step-sf">≈ Formula fields + roll-up summaries preparing data for Einstein</div></div></div>
+      <div class="flow-step"><span class="step-num step-ai">3</span><div class="step-body"><div class="step-tool">CML</div><div class="step-what">Train model in Jupyter notebook, experiment, tune</div><div class="step-sf">≈ Einstein Model Builder training on your data</div></div></div>
+      <div class="flow-step"><span class="step-num step-ai">4</span><div class="step-body"><div class="step-tool">CML Deploy</div><div class="step-what">One-click deploy as REST API endpoint</div><div class="step-sf">≈ Einstein Prediction deployed to a Record Page</div></div></div>
+      <div class="flow-step"><span class="step-num step-serve">5</span><div class="step-body"><div class="step-tool">App / API</div><div class="step-what">App calls model API, gets prediction, takes action</div><div class="step-sf">≈ Next Best Action component on a Lightning page</div></div></div>
     </div>
   </div>
 
-  <!-- FLOW 4: Governance overlay -->
-  <div class="flow-container">
-    <div class="flow-title">Governance: the layer that wraps everything</div>
-    <div class="flow-subtitle">Atlas + Ranger aren't a step in the pipeline — they're the security and audit layer across ALL steps.</div>
-    <div class="flow">
-      <div class="flow-node fn-govern">
-        <div class="fn-label">Ranger</div>
-        <div class="fn-desc">Every query, every tool checks: "does this user have permission?"</div>
-        <div class="fn-sf">≈ Profile + FLS checks on every SOQL query and page load</div>
-      </div>
-      <div class="flow-arrow">+</div>
-      <div class="flow-node fn-govern">
-        <div class="fn-label">Atlas</div>
-        <div class="fn-desc">Every transformation logged: where data came from, who touched it</div>
-        <div class="fn-sf">≈ Setup Audit Trail + Field History for your entire data estate</div>
-      </div>
-      <div class="flow-arrow">=</div>
-      <div class="flow-node fn-govern">
-        <div class="fn-label">Compliance</div>
-        <div class="fn-desc">Auditors can trace any number to its source. Required for HIPAA, SOX, GDPR</div>
-        <div class="fn-sf">≈ Your AIRFX compliance engine — same problem, platform-wide scope</div>
-      </div>
+  <div class="flow-card">
+    <h2>Governance: the layer that wraps everything</h2>
+    <p class="flow-sub">Atlas + Ranger aren't a step in the pipeline — they're the security and audit layer across ALL steps.</p>
+    <div class="flow-steps">
+      <div class="flow-step"><span class="step-num step-govern">✓</span><div class="step-body"><div class="step-tool">Ranger</div><div class="step-what">Every query, every tool checks: "does this user have permission?"</div><div class="step-sf">≈ Profile + FLS checks on every SOQL query and page load</div></div></div>
+      <div class="flow-step"><span class="step-num step-govern">✓</span><div class="step-body"><div class="step-tool">Atlas</div><div class="step-what">Every transformation logged: where data came from, who touched it</div><div class="step-sf">≈ Setup Audit Trail + Field History for your entire data estate</div></div></div>
+      <div class="flow-step"><span class="step-num step-govern">✓</span><div class="step-body"><div class="step-tool">Compliance</div><div class="step-what">Auditors can trace any number to its source. Required for HIPAA, SOX, GDPR</div><div class="step-sf">≈ Your AIRFX compliance engine — same problem, platform-wide scope</div></div></div>
     </div>
   </div>
 </div>
 
-<!-- ======================= SECTION: QUIZ ======================= -->
+<!-- FLASH CARDS -->
 <div class="section" id="sec-quiz">
-  <div class="section-head">
-    <h1>Flash cards.</h1>
-    <p>Click to flip. All answers are in Salesforce terms. Track your score — if you can explain it in SF language, you understand it.</p>
+  <h1>Flash cards</h1>
+  <p class="subtitle">Click to flip. All answers in Salesforce terms. Track what you've mastered.</p>
+
+  <div class="score-bar">
+    <div><div class="score-num" id="score-display">0 / 24</div><div class="score-label">cards mastered</div></div>
+    <div class="prog"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+    <button class="btn-sm" onclick="resetQuiz()">Reset</button>
   </div>
 
-  <div class="score-banner">
-    <div>
-      <div class="score-label">Cards mastered</div>
-      <div class="score-num" id="score-display">0 / 24</div>
-    </div>
-    <div class="score-right">
-      <div class="progress-bar" style="width:200px"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-      <button class="btn-reset" onclick="resetQuiz()">Reset</button>
-    </div>
+  <div class="filters" id="filters">
+    <button class="active" onclick="filterQ('all',this)">All</button>
+    <button onclick="filterQ('ingestion',this)">Ingestion</button>
+    <button onclick="filterQ('streaming',this)">Streaming</button>
+    <button onclick="filterQ('processing',this)">Processing</button>
+    <button onclick="filterQ('storage',this)">Storage</button>
+    <button onclick="filterQ('governance',this)">Governance</button>
+    <button onclick="filterQ('ai',this)">AI/ML</button>
+    <button onclick="filterQ('concepts',this)">Concepts</button>
   </div>
 
-  <div class="quiz-filter" id="quiz-filter">
-    <button class="active" onclick="filterQuiz('all', this)">All</button>
-    <button onclick="filterQuiz('ingestion', this)">Ingestion</button>
-    <button onclick="filterQuiz('streaming', this)">Streaming</button>
-    <button onclick="filterQuiz('processing', this)">Processing</button>
-    <button onclick="filterQuiz('storage', this)">Storage</button>
-    <button onclick="filterQuiz('governance', this)">Governance</button>
-    <button onclick="filterQuiz('ai', this)">AI/ML</button>
-    <button onclick="filterQuiz('concepts', this)">Concepts</button>
-  </div>
-
-  <div class="quiz-grid" id="quiz-grid"></div>
+  <div class="q-grid" id="q-grid"></div>
 </div>
 
-<!-- ======================= SECTION: INTERVIEW ======================= -->
+<!-- INTERVIEW PREP -->
 <div class="section" id="sec-interview">
-  <div class="section-head">
-    <h1>Interview prep.</h1>
-    <p>Likely questions from Andrew + your talking points. Click to expand the answer you'd actually say.</p>
-  </div>
+  <h1>Interview prep</h1>
+  <p class="subtitle">Likely questions from Andrew + the answer you'd actually say. Click to expand.</p>
 
-  <details class="interview-q">
+  <details class="iq">
     <summary>Tell me about yourself and why Cloudera.</summary>
-    <div class="answer">
-      I'm an SE at Salesforce covering public sector — government, education, nonprofits. Over the past year I've moved from pure solution selling into building production AI systems. I designed an agentic triage engine that Salesforce just published as a case study — automated bid scoring, compliance routing, 36% faster delivery. I'm looking at Cloudera because the interesting AI problems live at the data layer, and I want to work closer to that infrastructure. The application layer is solved. The hard part is getting enterprise data ready for AI — that's where Cloudera lives.
-      <div class="talking-point">Key line: "Salesforce published a case study on the AI system I built. Now I want to solve the data infrastructure problems underneath."</div>
-    </div>
+    <div class="ans">I'm an SE at Salesforce covering public sector — government, education, nonprofits. Over the past year I've moved from pure solution selling into building production AI systems. I designed an agentic triage engine that Salesforce just published as a case study — automated bid scoring, compliance routing, 36% faster delivery. I'm looking at Cloudera because the interesting AI problems live at the data layer, and I want to work closer to that infrastructure.<div class="tp">Key line: "Salesforce published a case study on the AI system I built. Now I want to solve the data infrastructure problems underneath."</div></div>
   </details>
-
-  <details class="interview-q">
+  <details class="iq">
     <summary>What's your experience with our platform / stack?</summary>
-    <div class="answer">
-      I'll be direct — I haven't run Spark clusters or configured Kafka. My hands-on experience is at the application and AI layer: Python, SQL, building agentic systems, data pipelines on GCP. But I've made this transition before. I went from accounting into Salesforce — didn't know Apex, metadata APIs, or the platform. Within a year I was building the system they wrote the case study about. The stack is learnable. The instinct for how to architect solutions for enterprise customers and navigate regulated environments — that's what I'm bringing.
-      <div class="talking-point">Key line: "I'm not going to pretend I've run Spark jobs. But six months ago I hadn't built an AI triage engine either, and Salesforce just published a case study on what I delivered."</div>
-    </div>
+    <div class="ans">I'll be direct — I haven't run Spark clusters or configured Kafka. My hands-on is at the application and AI layer: Python, SQL, agentic systems, data pipelines on GCP. But I've made this transition before. I went from accounting into Salesforce — didn't know Apex, metadata APIs, or the platform. Within a year I was building the system they wrote the case study about. The stack is learnable. The instinct for architecting solutions for enterprise customers in regulated environments — that's what I'm bringing.<div class="tp">Key line: "I'm not going to pretend I've run Spark jobs. But six months ago I hadn't built an AI triage engine either, and Salesforce just published a case study on what I delivered."</div></div>
   </details>
-
-  <details class="interview-q">
+  <details class="iq">
     <summary>How do you run customer discovery?</summary>
-    <div class="answer">
-      I lead with the business problem, not the technology. First call, I'm not talking product — I want to understand what's breaking, what's being left on the table, who needs to trust the data, and what happens when they can't. At Salesforce I ran discovery with 40+ public sector IT leaders — rooms with developers, architects, and CIOs simultaneously. I calibrate the conversation for each audience. Then I close discovery by reflecting back what I heard in business outcome terms, not technical terms. That's what earns the right to go deeper on architecture.
-      <div class="talking-point">Key line: "I start with the data journey — where is it coming from, where does it need to go, who needs to trust it, and what happens when they can't."</div>
-    </div>
+    <div class="ans">I lead with the business problem, not the technology. First call, I want to understand what's breaking, what's being left on the table, who needs to trust the data, and what happens when they can't. At Salesforce I ran discovery with 40+ public sector IT leaders — rooms with developers, architects, and CIOs simultaneously. I calibrate the conversation for each audience. Then I close by reflecting back what I heard in business outcome terms. That earns the right to go deeper on architecture.<div class="tp">Key line: "I start with the data journey — where is it coming from, where does it need to go, who needs to trust it, and what happens when they can't."</div></div>
   </details>
-
-  <details class="interview-q">
+  <details class="iq">
     <summary>Walk me through a complex technical project.</summary>
-    <div class="answer">
-      I built the AI triage engine behind Salesforce's GPS bid management platform — they just published it as a case study. The system scores every incoming bid automatically using 600+ business rules, routes it through compliance checks pulling live certification data, and assigns a Red/Yellow/Green flag. 475 passing tests, 100% of bids scored at intake, 40% answer automation rate, 8,700 hours saved across bid managers. I owned design, architecture, and build end-to-end.
-      <div class="talking-point">Key line: "Here's the published case study — I can send you the link. I designed and built the engine behind these numbers."</div>
-    </div>
+    <div class="ans">I built the AI triage engine behind Salesforce's GPS bid management platform — they just published it as a case study. The system scores every incoming bid automatically using 600+ business rules, routes through compliance checks pulling live certification data, and assigns Red/Yellow/Green flags. 475 passing tests, 100% of bids scored at intake, 40% answer automation rate, 8,700 hours saved. I owned design, architecture, and build end-to-end.<div class="tp">Key line: "Here's the published case study — I can send you the link. I designed and built the engine behind these numbers."</div></div>
   </details>
-
-  <details class="interview-q">
+  <details class="iq">
     <summary>Where do you see AI fitting into Cloudera's platform?</summary>
-    <div class="answer">
-      The bottleneck for enterprise AI isn't the model — it's the data underneath. Every customer I've worked with has the same problem: their data is siloed, ungoverned, and not ready for AI. Cloudera sits in exactly the right spot because you own the data layer. CML for model training is table stakes — the real differentiator is that the data is already there, already governed by Ranger, already cataloged by Atlas. You're not moving data to a separate ML platform. That end-to-end story — from raw ingestion to governed, production-grade AI — is what none of the hyperscalers do as cleanly for on-prem and hybrid.
-      <div class="talking-point">Key line: "AI without governed data is just hallucinations with extra steps. Cloudera solves the data problem first — that's the moat."</div>
-    </div>
+    <div class="ans">The bottleneck for enterprise AI isn't the model — it's the data underneath. Every customer I've worked with has the same problem: siloed, ungoverned data that's not ready for AI. Cloudera sits in exactly the right spot because you own the data layer. CML for model training is table stakes — the real differentiator is the data is already there, governed by Ranger, cataloged by Atlas. That end-to-end story — raw ingestion to governed, production-grade AI — is what the hyperscalers don't do as cleanly for on-prem and hybrid.<div class="tp">Key line: "AI without governed data is just hallucinations with extra steps. Cloudera solves the data problem first — that's the moat."</div></div>
   </details>
-
-  <details class="interview-q">
+  <details class="iq">
     <summary>Why should I hire you over someone who already knows the stack?</summary>
-    <div class="answer">
-      Because the stack is the easiest part to learn. What's hard to find is someone who's built production AI in a regulated enterprise environment, understands compliance and governance from the inside, and can translate between engineering depth and executive conversations. You have candidates who know HDFS and Spark. How many of them have a published case study on an AI system they built, can whiteboard a solution architecture, AND close a room of government CIOs? The stack gap closes in weeks. The other stuff takes years.
-      <div class="talking-point">Key line: "The stack is learnable. The judgment to architect AI solutions for enterprise customers — that takes years. I'm bringing the years."</div>
-    </div>
+    <div class="ans">Because the stack is the easiest part to learn. What's hard to find is someone who's built production AI in a regulated enterprise, understands compliance from the inside, and can translate between engineering depth and executive conversations. You have candidates who know HDFS and Spark. How many of them have a published case study, can whiteboard a solution architecture, AND close a room of government CIOs?<div class="tp">Key line: "The stack is learnable. The judgment to architect AI solutions for enterprise customers — that takes years. I'm bringing the years."</div></div>
   </details>
-
-  <details class="interview-q">
-    <summary>What does your SE onboarding ramp look like?</summary>
-    <div class="answer">
-      This is actually a question I'd love to ask you. What does the typical ramp look like for a new SE? How quickly are people expected to run deals independently? And is there a lab environment I can use to get hands-on with the platform? I learn fastest by building — my first instinct will be to stand up a pipeline, break it, fix it, and demo it.
-      <div class="talking-point">This is a question TO ASK, not to answer. Shows you're thinking about how to ramp, not whether you can.</div>
+  <details class="iq">
+    <summary>Questions to ask Andrew</summary>
+    <div class="ans">
+      <strong>1.</strong> What does your SE onboarding look like? How quickly are people running deals independently?<br><br>
+      <strong>2.</strong> Is there a lab environment for ramping on the platform?<br><br>
+      <strong>3.</strong> Where does AI fit into the conversations your SEs are having with customers today vs. a year ago?<br><br>
+      <strong>4.</strong> What does the technical evaluation look like for this role? I want to make sure I prep appropriately.<br><br>
+      <strong>5.</strong> How does the SE team engage with product on the AI/ML roadmap?
+      <div class="tp">Asking about onboarding and the tech eval shows you're thinking about how to ramp, not whether you can.</div>
     </div>
   </details>
 </div>
 
-<!-- ======================= SECTION: MAPPING ======================= -->
+<!-- MY PROJECTS → CDP -->
 <div class="section" id="sec-mapping">
-  <div class="section-head">
-    <h1>Your projects → Cloudera.</h1>
-    <p>Everything you've built maps to something Cloudera customers need. Here's how to talk about it.</p>
-  </div>
+  <h1>Your projects → Cloudera</h1>
+  <p class="subtitle">Everything you've built maps to something Cloudera customers need.</p>
 
-  <div class="card" style="border-left: 3px solid var(--accent);">
+  <div class="proj" style="border-left: 3px solid #E45525;">
     <h3>AIRFX → Enterprise AI on governed data</h3>
-    <p>You built an AI triage engine processing 1,500+ bids/year with 600+ business rules, compliance routing, and Red/Yellow/Green flag assignment. Published case study with 36% faster delivery, 8,700 hours saved.</p>
-    <div class="sf-analogy"><strong>Cloudera angle:</strong> "This is the exact use case your customers want to build on CML — AI that makes real decisions on enterprise data, with governance and compliance baked in. I've done it. I can show customers how."</div>
+    <p>AI triage engine processing 1,500+ bids/year with 600+ business rules, compliance routing, Red/Yellow/Green flags. Published case study: 36% faster delivery, 8,700 hours saved.</p>
+    <div class="sf-box"><strong>Cloudera angle:</strong> "This is the exact use case customers want to build on CML — AI that makes real decisions on enterprise data, with governance baked in. I've done it."</div>
   </div>
-
-  <div class="card" style="border-left: 3px solid var(--teal);">
+  <div class="proj" style="border-left: 3px solid #22C55E;">
     <h3>Tag Watchdog → Batch data pipeline</h3>
-    <p>Collect wildlife tracking data on a schedule → transform → store in BigQuery → alert via ntfy. Running on GCP with cron scheduling on Render.</p>
-    <div class="sf-analogy"><strong>Cloudera angle:</strong> "This is a NiFi → HDFS → Spark → alert pipeline in miniature. Same pattern, smaller scale. I understand the architecture — I've built it with different tools."</div>
+    <p>Collect wildlife tracking data on a schedule → transform → store in BigQuery → alert via ntfy. Running on GCP with cron on Render.</p>
+    <div class="sf-box"><strong>Cloudera angle:</strong> "This is a NiFi → HDFS → Spark → alert pipeline in miniature. Same pattern, smaller scale. I understand the architecture."</div>
   </div>
-
-  <div class="card" style="border-left: 3px solid var(--blue);">
+  <div class="proj" style="border-left: 3px solid #2563EB;">
     <h3>CACR → Model evaluation + cost routing</h3>
-    <p>Multi-model AI evaluation with cost-based routing and BigQuery analytics. Demonstrates understanding of model comparison, evaluation metrics, and cost optimization.</p>
-    <div class="sf-analogy"><strong>Cloudera angle:</strong> "Your customers deploying CML models face the same question — which model, at what cost, for which use case? I've built the evaluation framework to answer that."</div>
+    <p>Multi-model AI evaluation with cost-based routing and BigQuery analytics. Model comparison, evaluation metrics, cost optimization.</p>
+    <div class="sf-box"><strong>Cloudera angle:</strong> "Customers deploying CML models face the same question — which model, at what cost, for which use case? I've built the evaluation framework."</div>
   </div>
-
-  <div class="card" style="border-left: 3px solid var(--purple);">
+  <div class="proj" style="border-left: 3px solid #7C3AED;">
     <h3>Texas Bill Summarizer → Document classification + NLP</h3>
-    <p>Ingest legislative PDFs → extract text → classify using AI → store structured analysis in Salesforce. Sequential fan-out architecture on Heroku.</p>
-    <div class="sf-analogy"><strong>Cloudera angle:</strong> "Document classification at scale is a core Cloudera use case — ingest unstructured docs, run NLP, store structured output. I've done it end-to-end."</div>
+    <p>Ingest legislative PDFs → extract text → classify with AI → store structured analysis. Sequential fan-out on Heroku.</p>
+    <div class="sf-box"><strong>Cloudera angle:</strong> "Document classification at scale is a core use case — ingest unstructured docs, run NLP, store structured output. Done it end-to-end."</div>
   </div>
-
-  <div class="card" style="border-left: 3px solid var(--gold);">
+  <div class="proj" style="border-left: 3px solid #D97706;">
     <h3>Fireworks text-to-SQL → Natural language analytics</h3>
-    <p>CLI agent that converts natural language questions to SQL queries against the Chinook database. Built in 24 hours as a take-home.</p>
-    <div class="sf-analogy"><strong>Cloudera angle:</strong> "Natural language to SQL is exactly what customers want on top of Impala and Spark SQL. I've built the agent that does it."</div>
+    <p>CLI agent converting natural language to SQL against Chinook DB. Built in 24 hours.</p>
+    <div class="sf-box"><strong>Cloudera angle:</strong> "Natural language to SQL is what customers want on top of Impala and Spark SQL. I've built the agent that does it."</div>
   </div>
-
-  <div class="card" style="border-left: 3px solid var(--pink);">
+  <div class="proj" style="border-left: 3px solid #DB2777;">
     <h3>Deep Research Eval → AI research infrastructure</h3>
-    <p>Building an evaluation environment for Salesforce's AI Research team. Bridges research and production — exactly the gap CML fills.</p>
-    <div class="sf-analogy"><strong>Cloudera angle:</strong> "I understand the gap between research and production AI. CML's job is to close that gap. I've been building that bridge at Salesforce."</div>
+    <p>Evaluation environment for Salesforce's AI Research team. Bridges research and production — exactly the gap CML fills.</p>
+    <div class="sf-box"><strong>Cloudera angle:</strong> "I understand the gap between research and production AI. CML closes that gap. I've been building that bridge at Salesforce."</div>
   </div>
 </div>
 
 </main>
 
 <script>
-// Tab navigation
 function showSection(id) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.getElementById('sec-' + id).classList.add('active');
@@ -927,95 +399,74 @@ function showSection(id) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// Quiz data
-const quizData = [
-  { cat: 'ingestion', q: 'What does NiFi do?', a: 'Visual drag-and-drop data routing. You draw a pipeline on a canvas — grab data from here, transform it, deliver it there. No code.', sf: 'It\'s Flow Builder for data pipelines. Drag processors, connect them, done.' },
-  { cat: 'ingestion', q: 'What does Kafka do?', a: 'Real-time message bus. Systems publish events to "topics," other systems subscribe and read them. Nothing gets lost, everything stays ordered.', sf: 'Platform Events at massive scale. Publish → subscribe, but handling millions/sec across the whole enterprise.' },
-  { cat: 'ingestion', q: 'NiFi vs Kafka — when do you use which?', a: 'NiFi moves and transforms data between systems (ETL routing). Kafka holds events in an ordered queue so multiple consumers can read at their own pace.', sf: 'NiFi = Flow that moves data. Kafka = Platform Event bus that holds events until subscribers read them.' },
-  { cat: 'streaming', q: 'What is stream processing?', a: 'Processing data the instant it arrives, not in scheduled batches. React to events in real time — fraud detection, live dashboards, anomaly alerts.', sf: 'Platform Event-Triggered Flow vs. Scheduled Flow. One fires instantly, one waits for a schedule.' },
-  { cat: 'streaming', q: 'Flink vs Spark Streaming?', a: 'Flink processes event-by-event in true real time. Spark Streaming processes in micro-batches (every few seconds). Flink = lower latency, Spark = easier if you already use Spark.', sf: 'Flink = Record-Triggered Flow (instant). Spark Streaming = Scheduled Flow running every 5 min.' },
-  { cat: 'streaming', q: 'What is a Kafka "topic"?', a: 'A named channel events are published to. Producers write to a topic, consumers subscribe and read from it. Like a chat channel — anyone can post, anyone subscribed sees it.', sf: 'A Platform Event definition. You define the event, publishers fire it, subscribers listen for it.' },
-  { cat: 'processing', q: 'What is Spark?', a: 'Distributed compute engine. Splits work across many machines. Runs SQL, Python, and ML jobs. The workhorse for transforming data at scale.', sf: 'SOQL + Apex Batch parallelized across 100 machines. You can write Spark in SQL or Python.' },
-  { cat: 'processing', q: 'What is PySpark?', a: 'Python API for Spark. Write Python code that executes distributed across a cluster. Same Spark engine, Python syntax.', sf: 'Like writing Apex but in Python — and it runs across a cluster, not one Salesforce pod.' },
-  { cat: 'processing', q: 'What is Impala?', a: 'Interactive SQL engine for fast queries on data lake data. Built for BI dashboards and ad-hoc analysis. Seconds, not minutes.', sf: 'SOQL in Developer Console, but against petabytes. Analysts use it to power dashboards.' },
-  { cat: 'processing', q: 'Spark SQL vs Impala — what\'s the difference?', a: 'Both run SQL. Spark SQL is for heavy transforms and batch jobs. Impala is for fast, interactive queries. Spark processes; Impala queries.', sf: 'Spark = Apex Batch (heavy lifting). Impala = SOQL (fast lookups). Different tools, same language.' },
-  { cat: 'storage', q: 'What is HDFS?', a: 'Hadoop Distributed File System. Stores massive files by splitting them across machines with 3x replication. The foundation layer.', sf: 'Salesforce Files / ContentVersion for the entire enterprise. You don\'t query it directly — Spark and Impala read from it.' },
-  { cat: 'storage', q: 'What is a "data lake"?', a: 'A central repository for ALL data — structured, semi-structured, unstructured — in its raw form. Store first, schema later. Opposite of a database.', sf: 'Imagine dumping every file, CSV, log, and API response into one massive Salesforce org with no objects — just raw data. Then you query it with Spark.' },
-  { cat: 'storage', q: 'What is Iceberg?', a: 'An open table format that organizes data lake files into proper tables with schemas, versioning, and time travel. The modern standard replacing Hive tables.', sf: 'Custom Objects + Field History Tracking for the data lake. Defines the schema, tracks versions, lets you query "what did this look like last Tuesday."' },
-  { cat: 'storage', q: 'HDFS vs Kudu vs HBase — when?', a: 'HDFS: bulk storage, batch reads. Kudu: structured data with fast analytics + updates. HBase: billions of rows, millisecond key lookups.', sf: 'HDFS = Files. Kudu = Big Objects that are actually fast. HBase = External Object lookups.' },
-  { cat: 'governance', q: 'What does Ranger do?', a: 'Centralized access control across the entire platform. Defines who can see which data, enforced in every tool — Spark, Impala, Kafka, NiFi, everything.', sf: 'Profiles + Permission Sets + FLS, but for the whole data platform — one policy, enforced everywhere.' },
-  { cat: 'governance', q: 'What does Atlas do?', a: 'Data catalog + lineage tracking. Shows where every piece of data came from, every transformation, who touched it. Essential for auditors.', sf: 'Setup Audit Trail + Field History for your entire data estate. Auditors ask "where did this number come from?" — Atlas answers.' },
-  { cat: 'governance', q: 'Why do enterprises care about data lineage?', a: 'Regulations (HIPAA, SOX, GDPR) require you to prove where data came from and who had access. Without lineage, you fail audits.', sf: 'Same reason you built compliance into AIRFX. Regulated industries need an audit trail. Atlas is that audit trail for the data platform.' },
-  { cat: 'ai', q: 'What is CML?', a: 'Cloudera Machine Learning. Jupyter notebooks, model training on cluster data, one-click deployment as REST APIs, drift monitoring. Runs on Kubernetes.', sf: 'Einstein AI Platform but for any data — not just CRM data. Train, deploy, monitor models on data lake data.' },
-  { cat: 'ai', q: 'How does CML connect to the rest of the stack?', a: 'CML reads training data from HDFS/Iceberg via Spark. Deployed models serve predictions via REST API. Ranger governs who can access which data. Atlas tracks lineage.', sf: 'Like Einstein reading from your objects, deploying to a Lightning page, with Profile security and Audit Trail — but at data lake scale.' },
-  { cat: 'ai', q: 'What is a feature store?', a: 'A central repo of pre-computed features (data transformations) used for ML training and serving. Ensures training and production use the same calculations.', sf: 'Formula fields that feed Einstein — defined once, used everywhere consistently. The feature store makes sure training data matches production data.' },
-  { cat: 'concepts', q: 'What is CDP?', a: 'Cloudera Data Platform. The unified product that bundles all these tools — HDFS, Spark, Kafka, NiFi, Impala, CML, Ranger, Atlas — into one managed platform. Runs on-prem, in any cloud, or hybrid.', sf: 'The Salesforce Platform itself. Just like "Salesforce" bundles Sales Cloud, Service Cloud, Flow, Apex, etc., CDP bundles the entire data stack.' },
-  { cat: 'concepts', q: 'On-prem vs cloud vs hybrid — why does it matter?', a: 'Many enterprises (banks, healthcare, government) CAN\'T put data in public cloud due to regulations. Cloudera runs on-prem, in any cloud, or both. That\'s the differentiator vs. hyperscalers.', sf: 'Like Salesforce Government Cloud. Some customers need data sovereignty — their data can\'t leave certain boundaries. Cloudera supports that natively.' },
-  { cat: 'concepts', q: 'What is the "data lakehouse"?', a: 'Combines data lake flexibility (store anything) with data warehouse structure (schemas, ACID transactions, fast queries). Iceberg tables on HDFS = lakehouse.', sf: 'Imagine if Salesforce objects had the flexibility of Files (store anything) but the queryability of Reports (structured, fast). That\'s a lakehouse.' },
-  { cat: 'concepts', q: 'What makes Cloudera different from Databricks / Snowflake?', a: 'Cloudera runs anywhere — on-prem, any cloud, hybrid. Open source core (no vendor lock-in). Strongest in regulated industries that need data sovereignty and governance.', sf: 'Like Salesforce vs. a SaaS-only competitor. Some customers need on-prem. Cloudera is the only one that does on-prem AND cloud at enterprise scale.' },
+const qd = [
+  {cat:'ingestion',q:'What does NiFi do?',a:'Visual drag-and-drop data routing. Draw a pipeline on a canvas — grab data, transform it, deliver it. No code.',sf:'Flow Builder for data pipelines. Drag processors, connect them, done.'},
+  {cat:'ingestion',q:'What does Kafka do?',a:'Real-time message bus. Systems publish events to "topics," others subscribe and read. Nothing lost, everything ordered.',sf:'Platform Events at massive scale. Publish → subscribe, millions/sec.'},
+  {cat:'ingestion',q:'NiFi vs Kafka — when which?',a:'NiFi moves and transforms data between systems (ETL routing). Kafka holds events in an ordered queue so multiple consumers read at their own pace.',sf:'NiFi = Flow that moves data. Kafka = event bus that holds events for subscribers.'},
+  {cat:'streaming',q:'What is stream processing?',a:'Processing data the instant it arrives, not in scheduled batches. React in real time — fraud detection, live dashboards, anomaly alerts.',sf:'Platform Event-Triggered Flow vs. Scheduled Flow. One fires instantly, one waits.'},
+  {cat:'streaming',q:'Flink vs Spark Streaming?',a:'Flink: true real-time, event-by-event. Spark Streaming: micro-batches every few seconds. Flink = lower latency. Spark = easier if you already use Spark.',sf:'Flink = Record-Triggered Flow (instant). Spark Streaming = Scheduled Flow every 5 min.'},
+  {cat:'streaming',q:'What is a Kafka "topic"?',a:'A named channel for events. Producers write to it, consumers subscribe. Like a chat channel — anyone posts, subscribers see it.',sf:'A Platform Event definition. Define it, publishers fire it, subscribers listen.'},
+  {cat:'processing',q:'What is Spark?',a:'Distributed compute engine. Splits work across many machines. Runs SQL, Python, ML. The workhorse for data at scale.',sf:'SOQL + Apex Batch parallelized across 100 machines. Write it in SQL or Python.'},
+  {cat:'processing',q:'What is PySpark?',a:'Python API for Spark. Write Python that runs distributed across a cluster. Same engine, Python syntax.',sf:'Apex but in Python — and it runs across a cluster, not one Salesforce pod.'},
+  {cat:'processing',q:'What is Impala?',a:'Interactive SQL engine for fast queries on lake data. Seconds, not minutes. Built for dashboards.',sf:'SOQL in Developer Console against petabytes. Powers dashboards like SF Reports.'},
+  {cat:'processing',q:'Spark SQL vs Impala?',a:'Both run SQL. Spark SQL = heavy transforms and batch. Impala = fast interactive queries. Spark processes; Impala queries.',sf:'Spark = Apex Batch (heavy lifting). Impala = SOQL (fast lookups). Same language, different jobs.'},
+  {cat:'storage',q:'What is HDFS?',a:'Distributed file system. Splits massive files across machines, 3x replication. Foundation layer everything reads from.',sf:'SF Files for the enterprise. Store terabytes of raw data. Read via Spark/Impala, like using SOQL on objects.'},
+  {cat:'storage',q:'What is a "data lake"?',a:'Central repo for ALL data — structured, unstructured — in raw form. Store first, schema later.',sf:'Every file, CSV, log dumped into one massive org with no objects — just raw data. Query with Spark.'},
+  {cat:'storage',q:'What is Iceberg?',a:'Open table format organizing lake files into proper tables. Time travel, schema evolution, ACID transactions. Modern standard.',sf:'Custom Objects + Field History for the data lake. Schema + version tracking.'},
+  {cat:'storage',q:'HDFS vs Kudu vs HBase?',a:'HDFS: bulk storage, batch reads. Kudu: structured + fast analytics + updates. HBase: billions of rows, millisecond key lookups.',sf:'HDFS = Files. Kudu = fast Big Objects. HBase = External Object lookups.'},
+  {cat:'governance',q:'What does Ranger do?',a:'Centralized access control across all tools. Who sees what data, down to column/row level. One policy, enforced everywhere.',sf:'Profiles + Permission Sets + FLS for the whole data platform.'},
+  {cat:'governance',q:'What does Atlas do?',a:'Data catalog + lineage. Where data came from, every transformation, who touched it.',sf:'Setup Audit Trail + Field History for your entire data estate.'},
+  {cat:'governance',q:'Why care about data lineage?',a:'Regulations (HIPAA, SOX, GDPR) require proving where data came from and who had access. No lineage = failed audits.',sf:'Same reason you built compliance into AIRFX. Regulated industries need audit trails.'},
+  {cat:'ai',q:'What is CML?',a:'Cloudera Machine Learning. Jupyter notebooks, model training, one-click REST API deployment, drift monitoring. On Kubernetes.',sf:'Einstein AI Platform for any data — not just CRM. Train, deploy, monitor.'},
+  {cat:'ai',q:'How does CML connect to the stack?',a:'Reads training data from HDFS/Iceberg via Spark. Deploys as REST API. Ranger governs access. Atlas tracks lineage.',sf:'Einstein reading from objects, deploying to Lightning page, with Profile security + Audit Trail.'},
+  {cat:'ai',q:'What is a feature store?',a:'Central repo of pre-computed features for ML. Ensures training and production use the same calculations.',sf:'Formula fields feeding Einstein — defined once, used everywhere consistently.'},
+  {cat:'concepts',q:'What is CDP?',a:'Cloudera Data Platform. Bundles all tools — HDFS, Spark, Kafka, NiFi, CML, Ranger, Atlas — into one managed platform. On-prem, cloud, or hybrid.',sf:'The Salesforce Platform itself. Bundles everything into one product.'},
+  {cat:'concepts',q:'On-prem vs cloud vs hybrid?',a:'Many enterprises can\'t put data in public cloud (regulations). Cloudera runs on-prem, any cloud, or both. Key differentiator vs. hyperscalers.',sf:'Like Salesforce Government Cloud. Data sovereignty — data can\'t leave certain boundaries.'},
+  {cat:'concepts',q:'What is a "data lakehouse"?',a:'Combines lake flexibility (store anything) with warehouse structure (schemas, ACID, fast queries). Iceberg on HDFS = lakehouse.',sf:'If SF objects had the flexibility of Files but the queryability of Reports. That\'s a lakehouse.'},
+  {cat:'concepts',q:'Cloudera vs Databricks / Snowflake?',a:'Cloudera runs anywhere — on-prem, any cloud, hybrid. Open source core, no lock-in. Strongest in regulated industries needing data sovereignty.',sf:'Like SF vs SaaS-only competitor. Some customers need on-prem. Cloudera does both.'},
 ];
 
-let mastered = new Set();
-try { mastered = new Set(JSON.parse(localStorage.getItem('cloudera-mastered') || '[]')); } catch(e) {}
+let m = new Set();
+try { m = new Set(JSON.parse(localStorage.getItem('cm') || '[]')); } catch(e) {}
 
-function renderQuiz(filter) {
-  const grid = document.getElementById('quiz-grid');
-  grid.innerHTML = '';
-  const filtered = filter === 'all' ? quizData : quizData.filter(d => d.cat === filter);
-  filtered.forEach((item, i) => {
-    const idx = quizData.indexOf(item);
-    const isMastered = mastered.has(idx);
-    const card = document.createElement('div');
-    card.className = 'quiz-card' + (isMastered ? ' flipped' : '');
-    card.setAttribute('data-idx', idx);
-    card.innerHTML = `
-      <div class="quiz-card-inner">
-        <div class="quiz-front">
-          <div class="q-category">${item.cat}</div>
-          <div class="q-question">${item.q}</div>
-          <div class="q-hint">Click to reveal answer</div>
-        </div>
-        <div class="quiz-back">
-          <div class="q-answer">${item.a}</div>
-          <div class="q-sf">SF: ${item.sf}</div>
-        </div>
-      </div>
-    `;
-    card.addEventListener('click', function() {
+function renderQ(f) {
+  const g = document.getElementById('q-grid');
+  g.innerHTML = '';
+  const items = f === 'all' ? qd : qd.filter(d => d.cat === f);
+  items.forEach(item => {
+    const idx = qd.indexOf(item);
+    const c = document.createElement('div');
+    c.className = 'q-card' + (m.has(idx) ? ' flipped' : '');
+    c.innerHTML = `<div class="q-inner"><div class="q-front"><div class="q-cat">${item.cat}</div><div class="q-text">${item.q}</div><div class="q-tap">tap to flip</div></div><div class="q-back"><div class="q-ans">${item.a}</div><div class="q-sf">SF: ${item.sf}</div></div></div>`;
+    c.onclick = function() {
       this.classList.toggle('flipped');
-      if (this.classList.contains('flipped')) {
-        mastered.add(idx);
-      } else {
-        mastered.delete(idx);
-      }
-      localStorage.setItem('cloudera-mastered', JSON.stringify([...mastered]));
-      updateScore();
-    });
-    grid.appendChild(card);
+      this.classList.contains('flipped') ? m.add(idx) : m.delete(idx);
+      localStorage.setItem('cm', JSON.stringify([...m]));
+      updScore();
+    };
+    g.appendChild(c);
   });
-  updateScore();
+  updScore();
 }
 
-function updateScore() {
-  document.getElementById('score-display').textContent = mastered.size + ' / ' + quizData.length;
-  document.getElementById('progress-fill').style.width = ((mastered.size / quizData.length) * 100) + '%';
+function updScore() {
+  document.getElementById('score-display').textContent = m.size + ' / ' + qd.length;
+  document.getElementById('prog-fill').style.width = ((m.size / qd.length) * 100) + '%';
 }
 
-function filterQuiz(cat, btn) {
-  document.querySelectorAll('.quiz-filter button').forEach(b => b.classList.remove('active'));
+function filterQ(cat, btn) {
+  document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
-  renderQuiz(cat);
+  renderQ(cat);
 }
 
 function resetQuiz() {
-  mastered.clear();
-  localStorage.setItem('cloudera-mastered', '[]');
-  renderQuiz('all');
+  m.clear();
+  localStorage.setItem('cm', '[]');
+  renderQ('all');
 }
 
-// Init quiz
-renderQuiz('all');
+renderQ('all');
 </script>
-
 </body>
 </html>
