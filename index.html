@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fireworks Take-Home Study Tool</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { 
+    font-family: 'IBM Plex Mono', 'SF Mono', monospace;
+    background: #0a0a0b; color: #e0e0e0; 
+    padding: 24px; min-height: 100vh;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  .eyebrow { font-size: 11px; letter-spacing: 2px; color: rgba(255,255,255,0.35); text-transform: uppercase; margin-bottom: 8px; }
+  h1 { font-family: 'IBM Plex Sans', sans-serif; font-size: 28px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; }
+  .subtitle { font-size: 13px; color: rgba(255,255,255,0.45); margin-bottom: 16px; }
+  
+  .toggles { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 28px; }
+  .mode-toggle {
+    padding: 6px 14px; border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px; background: transparent; color: #e0e0e0;
+    cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 600;
+    transition: all 0.15s;
+  }
+  .mode-toggle:hover { background: rgba(255,255,255,0.08); }
+  .mode-toggle.active { background: #ef4444; border-color: #ef4444; color: white; }
+
+  .section-btn {
+    padding: 10px 16px; border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px; background: rgba(255,255,255,0.03); color: #e0e0e0;
+    cursor: pointer; font-family: inherit; font-size: 14px;
+    transition: all 0.15s; text-align: left;
+  }
+  .section-btn:hover { background: rgba(255,255,255,0.07); }
+  .section-btn.active { border-color: #ef4444; background: rgba(239,68,68,0.1); }
+  .cat-buttons { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+
+  .cat-label { font-size: 12px; font-weight: 600; letter-spacing: 1px; color: rgba(255,255,255,0.35); margin-bottom: 10px; text-transform: uppercase; }
+  .cat-group { margin-bottom: 24px; }
+
+  .card {
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 8px;
+    padding: 16px; margin-bottom: 8px; cursor: pointer;
+    transition: all 0.2s; background: rgba(255,255,255,0.02);
+  }
+  .card:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.15); }
+  .card.expanded { border-color: rgba(239,68,68,0.4); background: rgba(255,255,255,0.04); }
+  .card-header { display: flex; justify-content: space-between; align-items: center; }
+  .card-left { display: flex; align-items: center; gap: 10px; }
+  .heat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .file-name { font-weight: 600; font-size: 14px; }
+  .file-path { font-size: 12px; color: rgba(255,255,255,0.25); }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
+
+  .detail { margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06); display: none; }
+  .card.expanded .detail { display: block; }
+  .detail-section { margin-bottom: 14px; }
+  .detail-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; margin-bottom: 6px; }
+  .detail-label.what { color: #3b82f6; }
+  .detail-label.why { color: #22c55e; }
+  .detail-label.tradeoffs { color: #f59e0b; }
+  .detail-text { font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.75); }
+  .tradeoff { padding: 8px 12px; background: rgba(245,158,11,0.06); border-left: 2px solid rgba(245,158,11,0.4); margin: 6px 0; border-radius: 0 4px 4px 0; font-size: 13px; line-height: 1.5; }
+
+  .beat-card {
+    padding: 14px 16px; border-left: 3px solid #ef4444;
+    background: rgba(239,68,68,0.05); border-radius: 0 6px 6px 0; margin-bottom: 10px;
+  }
+  .beat-num { font-weight: 700; color: #ef4444; font-size: 14px; }
+  .beat-label { font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; font-size: 15px; }
+  .beat-file { font-size: 11px; color: rgba(255,255,255,0.3); }
+  .beat-detail { font-size: 13px; color: rgba(255,255,255,0.6); line-height: 1.5; padding-left: 28px; margin-top: 4px; }
+
+  .reveal-btn {
+    padding: 4px 12px; border: 1px dashed rgba(255,255,255,0.2);
+    border-radius: 4px; background: transparent; color: rgba(255,255,255,0.4);
+    cursor: pointer; font-family: inherit; font-size: 12px;
+  }
+  .reveal-btn:hover { border-color: rgba(255,255,255,0.4); color: rgba(255,255,255,0.7); }
+
+  .quiz-card .detail { margin-top: 12px; padding-top: 12px; }
+  .quiz-counter { margin-top: 16px; text-align: center; font-size: 13px; color: rgba(255,255,255,0.3); }
+  .footer { margin-top: 40px; padding: 16px 0; border-top: 1px solid rgba(255,255,255,0.06); font-size: 11px; color: rgba(255,255,255,0.2); text-align: center; }
+  
+  #beats-view, #quiz-view, #browse-view { display: none; }
+  #browse-view { display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="eyebrow">Interview Prep</div>
+  <h1>Fireworks Take-Home Walkthrough</h1>
+  <div class="subtitle">10/10 dev · 13/15 synthetic · 23/25 combined (~92%) · $0.00094/query · ~67% cheaper than GPT-5.4</div>
+  
+  <div class="toggles">
+    <button class="mode-toggle" id="btn-beats" onclick="showView('beats')">Narrative Beats</button>
+    <button class="mode-toggle" id="btn-quiz" onclick="showView('quiz')">Quiz Mode</button>
+    <button class="mode-toggle" onclick="showView('browse')">Browse All</button>
+  </div>
+
+  <!-- BEATS VIEW -->
+  <div id="beats-view"></div>
+
+  <!-- QUIZ VIEW -->
+  <div id="quiz-view"></div>
+
+  <!-- BROWSE VIEW -->
+  <div id="browse-view"></div>
+
+  <div class="footer">🔥 Study this, then go nail it.</div>
+</div>
+
+<script>
+const DATA = [
+  {
+    category: "Core Source", icon: "⚡",
+    files: [
+      { name: "agent.py", path: "src/agent.py", heat: 3,
+        what: "SqlAgent class. NL → SQL via Fireworks API using structured JSON output ({sql, rationale}) → executes against SQLite → returns results. Repair loop (max 2 retries). Schema compaction (CREATE TABLE → one-line format, 29% token reduction).",
+        why: "Tool calling + execute-and-verify is the right pattern because you can't trust generated SQL blindly. Repair loop catches syntax errors and self-corrects. Schema compaction saves tokens without hurting accuracy.",
+        tradeoffs: [
+          "Repair loop adds latency on failures — but needed 0 retries across eval set. Safety net that costs nothing at runtime.",
+          "Schema compaction trades prompt readability for token efficiency. Tested — no impact on Kimi K2.",
+          "JSON mode forces structure but not all models honor it (30-70% across models). Key factor in model selection.",
+          "Auto-discovery via sqlite_master = works with ANY database, not just Chinook."
+        ]},
+      { name: "cli.py", path: "src/cli.py", heat: 1,
+        what: "Interactive REPL. User types questions, gets SQL + human-readable results. Run: python -m src.cli",
+        why: "Assignment asked for a CLI. Simple and interactive = reviewer runs it in 30 seconds.",
+        tradeoffs: [
+          "CLI over web UI = faster to build, easier to review, less visually impressive. Dashboard compensates.",
+          "No conversation memory — each question independent. Simplifies agent but no follow-ups."
+        ]},
+      { name: "evals.py", path: "src/evals.py", heat: 2,
+        what: "Eval framework. Runs agent against dev/synthetic sets, compares to gold answers, scores accuracy. --baseline mode and --questions flag.",
+        why: "Separating eval from agent = good engineering. Swap models or prompts, immediately measure impact.",
+        tradeoffs: [
+          "sql_result_match compares RESULTS not SQL text. Right choice but can't penalize inefficient queries.",
+          "Tolerant matching avoids false negatives but could theoretically mask edge cases."
+        ]},
+      { name: "perf.py", path: "src/perf.py", heat: 2,
+        what: "Latency + cost benchmarking. Captures p50/p90 latency, token counts, cost per query.",
+        why: "David optimized 'production inference from seconds to sub-200ms.' Having real numbers shows production thinking.",
+        tradeoffs: [
+          "Measured on shared serverless tier — latency varies. Honest: median ~3s, no SLO without dedicated deployment.",
+          "Three perf runs averaged to reduce noise. More runs = more reliable but costs API credits."
+        ]},
+      { name: "utils.py", path: "src/utils.py", heat: 0,
+        what: "load_db(), query_db(), get_schema() — SQLite helpers.",
+        why: "PROVIDED by Fireworks. Unmodified.",
+        tradeoffs: ["None — 'This was in the starter kit, I used it as-is.'"]}
+    ]
+  },
+  {
+    category: "Data Files", icon: "📊",
+    files: [
+      { name: "dev_answers.json", path: "data/dev_answers.json", heat: 3,
+        what: "YOUR agent's output for the 10 dev questions. The primary deliverable. 10/10 correct.",
+        why: "Required deliverable. Format matches dev_answers_example.json exactly.",
+        tradeoffs: ["10 questions is small — easy to overfit. That's why you built the synthetic set."]},
+      { name: "synthetic_questions.json", path: "data/synthetic_questions.json", heat: 3,
+        what: "15 hand-written questions. Patterns: subqueries, CASE/WHEN, NULL, date ranges, self-joins, COUNT DISTINCT, UNION, nested aggs, COALESCE, LIKE, correlated subqueries, date arithmetic, ROW_NUMBER, HAVING.",
+        why: "10 dev questions aren't enough. Stress-tests edge cases. 13/15 proves generalization.",
+        tradeoffs: [
+          "You wrote both questions AND gold answers — risk of bias. Mitigated by hard tier 3 patterns.",
+          "s_013 (date arithmetic) is flaky — model interprets 'last 6 months' differently.",
+          "s_014 (top-per-group with ROW_NUMBER) is a hard miss.",
+          "2 misses prove the set isn't cherry-picked."
+        ]},
+      { name: "baseline_results.json", path: "data/baseline_results.json", heat: 3,
+        what: "Naive prompt results: 2/10. 'Convert this question to SQL: {question}' — no schema, no JSON mode, no repair loop.",
+        why: "Most powerful number. Same model (Kimi K2p6), isolates agent architecture impact. Failures: 'no such table: sales', 'Assuming a schema like this...' (not SQL).",
+        tradeoffs: [
+          "Uses same model to isolate architecture impact. Fair comparison.",
+          "2/10 is generous — several didn't produce executable SQL at all."
+        ]},
+      { name: "model_sweep.json", path: "data/model_sweep.json", heat: 2,
+        what: "6 models: kimi-k2p6 (6/10, 70% JSON, 1678ms), k2p5 (7/10, 70%, 3405ms), deepseek-v4 (4/10, 60%), glm-5 (3/10, 30%), glm-5p1 (2/10, 30%), minimax (3/10, 30%).",
+        why: "Systematic model selection. JSON compliance was the deciding factor.",
+        tradeoffs: [
+          "Sweep was BEFORE improvements — K2p6 went 6/10 → 10/10 with better architecture.",
+          "Chose K2p6 over K2p5 despite lower accuracy because 2x faster. Improved accuracy through prompting.",
+          "Didn't test every model — scoped to promising SQL/code models."
+        ]},
+      { name: "Chinook.db", path: "data/Chinook.db", heat: 0,
+        what: "SQLite database. 11 tables: Artist, Album, Track, Genre, MediaType, Playlist, PlaylistTrack, Invoice, InvoiceLine, Customer, Employee.",
+        why: "Provided. Standard text-to-SQL benchmark.",
+        tradeoffs: []}
+    ]
+  },
+  {
+    category: "Scripts", icon: "🔧",
+    files: [
+      { name: "build_synthetic.py", path: "scripts/build_synthetic.py", heat: 1,
+        what: "Generates 15 synthetic eval questions with gold SQL.", why: "Reproducibility.", tradeoffs: []},
+      { name: "model_sweep.py", path: "scripts/model_sweep.py", heat: 1,
+        what: "Runs agent across models. Captures accuracy, latency, JSON compliance.", why: "Systematic model selection.", tradeoffs: []},
+      { name: "single_q_test.py", path: "scripts/single_q_test.py", heat: 0,
+        what: "Quick single-question test. Debugging tool.", why: "Fast iteration.", tradeoffs: []}
+    ]
+  },
+  {
+    category: "Performance", icon: "🏎️",
+    files: [
+      { name: "perf_kimi.json", path: "perf_kimi.json", heat: 1,
+        what: "Perf with full schema.", why: "Baseline before compaction.", tradeoffs: []},
+      { name: "perf_compact_1/2/3.json", path: "perf_compact_*.json", heat: 2,
+        what: "Three perf runs after schema compaction. Averaged.",
+        why: "Single runs on shared infra are noisy. Three runs = production benchmarking practice.",
+        tradeoffs: ["Three is better than one but not statistically rigorous. Good enough for scope."]}
+    ]
+  },
+  {
+    category: "Docs & Config", icon: "📝",
+    files: [
+      { name: "dashboard.html", path: "dashboard.html", heat: 3,
+        what: "Single-file interactive dashboard. Eval results, cost analysis, latency, live demo (paste API key, test any model via sql.js/WASM in-browser).",
+        why: "Goes beyond assignment. Reviewer EXPERIENCES the agent. Demonstrates SA skill: building customer-facing demo tools.",
+        tradeoffs: [
+          "Single HTML file = no build step, opens anywhere. Harder to maintain than React.",
+          "Live demo needs reviewer's own Fireworks API key.",
+          "Significant time vs. more agent improvements. Bet on 'wow factor' — it worked."
+        ]},
+      { name: "README.md", path: "README.md", heat: 2,
+        what: "Overview, setup, architecture, results, design decisions.", why: "First thing reviewer reads. Tells story in 2 minutes.", tradeoffs: []},
+      { name: "EMAIL.md", path: "EMAIL.md", heat: 2,
+        what: "Email to Raul. Technical results → business audience.", why: "Tests SA communication skill.", tradeoffs: []},
+      { name: "TESTING_LOG.md", path: "TESTING_LOG.md", heat: 1,
+        what: "Full testing history.", why: "Transparency. Shows process.", tradeoffs: []},
+      { name: "ASSIGNMENT.md", path: "ASSIGNMENT.md", heat: 0,
+        what: "Original instructions preserved.", why: "Shows you followed instructions. Asked vs. delivered (you delivered more).", tradeoffs: []},
+      { name: "setup.sh", path: "setup.sh", heat: 1,
+        what: "One-command setup. venv + deps. Falls back to pip when uv missing.", why: "Reviewer runs project in under 60 seconds.",
+        tradeoffs: ["Shell script over Docker. Simpler but assumes Unix."]},
+      { name: "pyproject.toml", path: "pyproject.toml", heat: 0,
+        what: "Project config and deps.", why: "Standard Python metadata.", tradeoffs: []}
+    ]
+  }
+];
+
+const BEATS = [
+  { num: 1, label: "Baseline was 2/10", detail: "Model hallucinated table names without schema. q_005 started with 'Assuming a schema like this...' — not SQL at all.", file: "baseline_results.json" },
+  { num: 2, label: "Systematic model sweep", detail: "JSON compliance was the deciding factor (30-70% across models). Chose K2p6 for latency, improved accuracy through architecture not model size.", file: "model_sweep.json" },
+  { num: 3, label: "Schema compaction", detail: "Cut tokens 29% with zero accuracy drop. Full CREATE TABLE → one-line format.", file: "perf_compact_*.json" },
+  { num: 4, label: "15 synthetic questions prove generalization", detail: "Tiered patterns, deliberate hard cases. Correlated subqueries, window functions, date arithmetic.", file: "synthetic_questions.json" },
+  { num: 5, label: "2 misses are honest", detail: "s_013 date arithmetic is flaky, s_014 top-per-group is a hard miss. Not cherry-picked.", file: "synthetic_questions.json" },
+  { num: 6, label: "Dashboard = customer POC tool", detail: "Live demo tab, sql.js in browser, no backend. The kind of tool an SA builds.", file: "dashboard.html" },
+  { num: 7, label: "With more time...", detail: "Conversation memory, CACR routing for cost optimization, dedicated deployment for latency SLOs.", file: null },
+];
+
+const HEAT = {
+  0: { bg: "rgba(120,120,120,0.08)", border: "rgba(120,120,120,0.2)", dot: "#888", label: "Low", color: "rgba(120,120,120,0.7)" },
+  1: { bg: "rgba(59,130,246,0.08)", border: "rgba(59,130,246,0.3)", dot: "#3b82f6", label: "Med", color: "rgba(59,130,246,0.9)" },
+  2: { bg: "rgba(245,158,11,0.08)", border: "rgba(245,158,11,0.3)", dot: "#f59e0b", label: "High", color: "rgba(245,158,11,0.9)" },
+  3: { bg: "rgba(239,68,68,0.08)", border: "rgba(239,68,68,0.3)", dot: "#ef4444", label: "Critical", color: "rgba(239,68,68,0.9)" },
+};
+
+let currentView = 'browse';
+let expandedFile = null;
+let activeCategory = null;
+let quizRevealed = {};
+
+function showView(view) {
+  currentView = view;
+  expandedFile = null;
+  quizRevealed = {};
+  document.querySelectorAll('.mode-toggle').forEach(b => b.classList.remove('active'));
+  if (view === 'beats') document.getElementById('btn-beats').classList.add('active');
+  if (view === 'quiz') document.getElementById('btn-quiz').classList.add('active');
+  render();
+}
+
+function toggleFile(name) {
+  expandedFile = expandedFile === name ? null : name;
+  render();
+}
+
+function toggleCategory(cat) {
+  activeCategory = activeCategory === cat ? null : cat;
+  expandedFile = null;
+  render();
+}
+
+function toggleQuiz(idx) {
+  quizRevealed[idx] = !quizRevealed[idx];
+  render();
+}
+
+function renderFileCard(f, isQuiz, quizIdx) {
+  const h = HEAT[f.heat];
+  const isExp = !isQuiz && expandedFile === f.name;
+  const isRevealed = isQuiz && quizRevealed[quizIdx];
+  
+  let tradeoffsHtml = '';
+  if (f.tradeoffs.length > 0) {
+    tradeoffsHtml = `<div><div class="detail-label tradeoffs">TRADEOFFS</div>${f.tradeoffs.map(t => `<div class="tradeoff">${t}</div>`).join('')}</div>`;
+  }
+
+  const detailHtml = `
+    <div class="detail" style="display:${(isExp || isRevealed) ? 'block' : 'none'}">
+      <div class="detail-section"><div class="detail-label what">WHAT IT DOES</div><div class="detail-text">${f.what}</div></div>
+      <div class="detail-section"><div class="detail-label why">WHY THIS APPROACH</div><div class="detail-text">${f.why}</div></div>
+      ${tradeoffsHtml}
+    </div>`;
+
+  if (isQuiz) {
+    return `<div class="card quiz-card" style="border-color:${isRevealed ? 'rgba(34,197,94,0.4)' : ''}">
+      <div class="card-header">
+        <div class="card-left">
+          <span class="file-name">${f.name}</span>
+          <span class="file-path">${f.path}</span>
+        </div>
+        <button class="reveal-btn" onclick="event.stopPropagation();toggleQuiz(${quizIdx})">${isRevealed ? 'hide' : 'what · why · tradeoffs?'}</button>
+      </div>
+      ${detailHtml}
+    </div>`;
+  }
+
+  return `<div class="card ${isExp ? 'expanded' : ''}" onclick="toggleFile('${f.name}')">
+    <div class="card-header">
+      <div class="card-left">
+        <div class="heat-dot" style="background:${h.dot}"></div>
+        <span class="file-name">${f.name}</span>
+        <span class="file-path">${f.path}</span>
+      </div>
+      <span class="tag" style="background:${h.bg};border:1px solid ${h.border};color:${h.color}">${h.label}</span>
+    </div>
+    ${detailHtml}
+  </div>`;
+}
+
+function render() {
+  // Beats
+  const beatsEl = document.getElementById('beats-view');
+  if (currentView === 'beats') {
+    beatsEl.style.display = 'block';
+    beatsEl.innerHTML = `
+      <div class="cat-label">7 Beats — Tell This Story in Order</div>
+      ${BEATS.map(b => `<div class="beat-card">
+        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:4px">
+          <span class="beat-num">#${b.num}</span>
+          <span class="beat-label">${b.label}</span>
+          ${b.file ? `<span class="beat-file">→ ${b.file}</span>` : ''}
+        </div>
+        <div class="beat-detail">${b.detail}</div>
+      </div>`).join('')}`;
+  } else {
+    beatsEl.style.display = 'none';
+  }
+
+  // Quiz
+  const quizEl = document.getElementById('quiz-view');
+  if (currentView === 'quiz') {
+    quizEl.style.display = 'block';
+    const criticalFiles = DATA.flatMap(c => c.files).filter(f => f.heat >= 2);
+    const revealedCount = Object.values(quizRevealed).filter(Boolean).length;
+    quizEl.innerHTML = `
+      <div class="cat-label">Quiz — ${criticalFiles.length} Critical Files — Test Yourself</div>
+      ${criticalFiles.map((f, i) => renderFileCard(f, true, i)).join('')}
+      <div class="quiz-counter">${revealedCount}/${criticalFiles.length} revealed</div>`;
+  } else {
+    quizEl.style.display = 'none';
+  }
+
+  // Browse
+  const browseEl = document.getElementById('browse-view');
+  if (currentView === 'browse') {
+    browseEl.style.display = 'block';
+    const cats = activeCategory ? DATA.filter(c => c.category === activeCategory) : DATA;
+    browseEl.innerHTML = `
+      <div class="cat-buttons">
+        ${DATA.map(c => `<button class="section-btn ${activeCategory === c.category ? 'active' : ''}" onclick="toggleCategory('${c.category}')">${c.icon} ${c.category} <span style="opacity:0.4;margin-left:4px">(${c.files.length})</span></button>`).join('')}
+      </div>
+      ${cats.map(c => `<div class="cat-group">
+        ${!activeCategory ? `<div class="cat-label">${c.icon} ${c.category}</div>` : ''}
+        ${c.files.map(f => renderFileCard(f, false, null)).join('')}
+      </div>`).join('')}`;
+  } else {
+    browseEl.style.display = 'none';
+  }
+}
+
+render();
+</script>
+</body>
+</html>
